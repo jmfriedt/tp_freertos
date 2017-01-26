@@ -1,14 +1,15 @@
-#include <libopencm3/cm3/common.h> // BEGIN_DECL,          added 150116
-#include <libopencm3/stm32/f1/rcc.h>
-#include <libopencm3/stm32/f1/gpio.h>
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/stm32/timer.h>
+#include <libopencm3/stm32/f4/memorymap.h>
+#include "common.h"
+
+void pwm_init_timer(volatile uint32_t *, uint32_t, uint32_t, uint32_t, uint32_t);
+void pwm_init_output_channel(uint32_t, enum tim_oc_id, volatile uint32_t *, uint32_t, uint32_t, uint16_t);
+void pwm_start_timer(uint32_t);
 
 //#define avec_newlib
-
-void clock_setup(void);
-void usart_setup(void);
-void gpio_setup(void);
 
 void pwm_init_timer(volatile uint32_t *reg, uint32_t en, uint32_t timer_peripheral, uint32_t prescaler, uint32_t period)
 {
@@ -50,9 +51,8 @@ void pwm_start_timer(uint32_t timer_peripheral)
 int main(void)
 { int i, c = 0;
   unsigned short k=1500,l=0,d=100;
-  clock_setup();
-  gpio_setup();
-  usart_setup();
+  Usart1_Init();
+  Led_Init();
 
   pwm_init_timer(&RCC_APB1ENR, RCC_APB1ENR_TIM2EN, TIM2, 24, 20000);
   pwm_init_output_channel(TIM2, TIM_OC3, &RCC_APB2ENR, RCC_APB2ENR_IOPAEN, GPIOA, GPIO_TIM2_CH3);
@@ -72,9 +72,8 @@ int main(void)
     gpio_toggle(GPIOC, GPIO8);
     c = (c == 9) ? 0 : c + 1;	// cyclic increment c
 #ifndef avec_newlib
-    usart_send_blocking(USART1, c + '0'); // USART1: send byte
-    usart_send_blocking(USART1, '\r');
-    usart_send_blocking(USART1, '\n');
+    uart_putc(c + '0'); // USART1: send byte
+    uart_puts("\r\n\0");
 #else
     printf("%d\r\n", (int)c); 
 #endif

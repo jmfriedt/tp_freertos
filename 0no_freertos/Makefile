@@ -1,15 +1,16 @@
-all: usart_stm32.bin
-#all: usart_cm3.bin usart_stm32.bin pwm_cm3.bin
+all: usart_cm3.bin usart_stm32.bin pwm_cm3.bin
 
 usart_cm3.bin: main_cm3.c ../common/usart_opencm3.c
 	arm-none-eabi-gcc -Wall -Wextra -Wimplicit-function-declaration \
            -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes \
            -Wundef -Wshadow -I~/sat/bin/../arm-none-eabi/include \
+	   -I../common \
            -fno-common -mthumb -mcpu=cortex-m3 -msoft-float -MD -DSTM32F1 \
            -o usart_cm3.o -c ../common/usart_opencm3.c
 	arm-none-eabi-gcc -Wall -Wextra -Wimplicit-function-declaration \
            -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes \
            -Wundef -Wshadow -I~/sat/bin/../arm-none-eabi/include \
+	   -I../common \
            -fno-common -mthumb -mcpu=cortex-m3 -msoft-float -MD -DSTM32F1 \
            -o main_cm3.o -c main_cm3.c
 	arm-none-eabi-gcc -o usart_cm3.elf usart_cm3.o main_cm3.o -lopencm3_stm32f1 --static \
@@ -24,11 +25,13 @@ pwm_cm3.bin: pwm_cm3.c
 	arm-none-eabi-gcc -Wall -Wextra -Wimplicit-function-declaration \
            -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes \
            -Wundef -Wshadow -I~/sat/bin/../arm-none-eabi/include \
+	   -I../common \
            -fno-common -mthumb -mcpu=cortex-m3 -msoft-float -MD -DSTM32F1 \
            -o usart_cm3.o -c ../common/usart_opencm3.c
 	arm-none-eabi-gcc -Wall -Wextra -Wimplicit-function-declaration \
            -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes \
            -Wundef -Wshadow -I~/sat/bin/../arm-none-eabi/include \
+	   -I../common \
            -fno-common -mthumb -mcpu=cortex-m3 -msoft-float -MD -DSTM32F1 \
            -o pwm_cm3.o -c pwm_cm3.c
 	arm-none-eabi-gcc -o pwm_cm3.elf pwm_cm3.o usart_cm3.o -lopencm3_stm32f1 --static \

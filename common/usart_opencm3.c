@@ -2,6 +2,9 @@
 #include <libopencm3/stm32/f1/rcc.h>
 #include <libopencm3/stm32/f1/gpio.h>
 #include <libopencm3/stm32/usart.h>
+#include <stdint.h>
+#include "common.h"
+void clock_setup(void);
 
 //#define avec_newlib
 
@@ -20,8 +23,9 @@ void clock_setup(void)
   rcc_periph_clock_enable(RCC_ADC1);  // exemple ADC
 }
 
-void usart_setup(void)
+void Usart1_Init(void)
 { // Setup GPIO pin GPIO_USART1_TX/GPIO9 on GPIO port A for transmit. */
+  clock_setup();
   gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ,
       GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_USART1_TX);
 
@@ -35,8 +39,11 @@ void usart_setup(void)
   usart_enable(USART1);
 }
 
-void gpio_setup(void)
+void Led_Init(void)
 {gpio_set_mode(GPIOC,GPIO_MODE_OUTPUT_2_MHZ,GPIO_CNF_OUTPUT_PUSHPULL,GPIO8|GPIO9);}
+
+void Led_Hi(void) {gpio_set  (GPIOC, GPIO9);}
+void Led_Lo(void) {gpio_clear(GPIOC, GPIO9);}
 
 // define newlib stub
 #ifdef avec_newlib
@@ -53,3 +60,8 @@ int _write(int file, char *ptr, int len)
   return -1;
 }
 #endif
+
+void uart_putc(char c) {usart_send_blocking(USART1, c);} // USART1: send byte
+
+/* Writes a zero teminated string over the serial line*/
+void uart_puts(char *c) {while(*c!=0) uart_putc(*(c++));}
