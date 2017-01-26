@@ -1,0 +1,32 @@
+Le probl\`eme que nous nous proposons d'aborder est la gestion de variables exploit\'ees
+par plusieurs t\^aches, et en particulier la coh\'erence des acc\`es au contenu des 
+emplacement m\'emoire associ\'e. 
+
+Un probl\`eme classique consiste en deux t\^aches qui tentent de manipuler une variable
+selon un processus complexe~: au d\'ebut de la t\^ache la valeur de la variable est lue,
+le traitement s'op\`ere pendant un certain temps, et finalement le r\'esultat des 
+calculs est stock\'e dans cette m\^eme variable. La catastrophe survient si la seconde
+t\^ache engage une manipulation sur cette m\^eme variable alors que le calcul est en cours.
+
+Ce probl\`eme est classique dans les syst\`emes embarqu\'es o\`u plusieurs t\^aches manipulent
+une m\^eme variable, mais aussi dans les interfaces graphiques o\`u les diverses fen\^etres
+sont g\'er\'ees par des processus ind\'ependant qui ont toutes les chances de manipuler des
+donn\'ees communes.
+
+Une des t\^aches des syst\`emes d'exploitation consiste \`a fournir des m\'ecanismes de
+protection de variables au cours de leur manipulation pour interdire tout acc\`es par une
+seconde t\^ache. Un bout de code est donc prot\'eg\'e d'acc\`es par une autre t\^ache au
+moyen de la m\'ethode des MUTEX (Mutually exclusive). Un mutex est pos\'e en d\'ebut de
+segment de code \`a prot\'eger, et toute autre t\^ache qui tentera d'acc\'eder \`a ce bout
+de code alors qu'il est d\'ej\`a en cours d'ex\'ecution se verra bloqu\'ee jusqu'\`a ce 
+que le mutex soit rel\^ach\'e. Si le calcul sur la variable est ainsi prot\'eg\'e par mutex,
+nous garantissons que une seule t\^ache manipule la donn\'ee \`a chaque instant.
+
+En pratique, une cons\'equence du mutex et de la mise en attente de la seconde t\^ache qui
+tente d'intervenir sur le bout de code prot\'eg\'e est de r\'eorganiser la s\'equence des
+calculs. Nous verrons donc que des modifications {\em a priori} anodines sur le code se
+traduit par une r\'eorganisation drastique de la s\'equence d'\'ex\'ecution.
+
+Au lieu de lancer un calcul complexe, nous simulerons une activit\'e longue sur une 
+variable par son affichage au travers d'un bus asynchrone (RS232), une t\^ache tr\`es
+lente compar\'ee \`a la vitesse de cadencement d'un processeur.
