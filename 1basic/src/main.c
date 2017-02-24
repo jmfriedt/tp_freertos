@@ -9,8 +9,8 @@ void vPrintUart(void* dummy);
 
 int main(void){
  volatile int i;
+ Usart1_Init(); // inits clock as well
  Led_Init();
- Usart1_Init();
 
  if (!(pdPASS == xTaskCreate( vLedsFloat, (signed char*) "LedFloat",128,NULL,10,NULL ))) goto hell;
  if (!(pdPASS == xTaskCreate( vLedsFlash, (signed char*) "LedFlash",128,NULL,10,NULL ))) goto hell;
@@ -24,22 +24,18 @@ hell:              // should never be reached
 
 void vLedsFloat(void* dummy)
 {while(1){
-  GPIO_SetBits (GPIOC, GPIO_Pin_2);
-  GPIO_SetBits (GPIOC, GPIO_Pin_9);
+  Led_Hi1();
   vTaskDelay(120/portTICK_RATE_MS);
-  GPIO_ResetBits (GPIOC, GPIO_Pin_2);
-  GPIO_ResetBits (GPIOC, GPIO_Pin_9);
+  Led_Lo1();
   vTaskDelay(120/portTICK_RATE_MS);
  }
 }
 
 void vLedsFlash(void* dummy)
 {while(1){
-  GPIO_SetBits (GPIOC, GPIO_Pin_1);
-  GPIO_SetBits (GPIOC, GPIO_Pin_8);
+  Led_Hi2();
   vTaskDelay(301/portTICK_RATE_MS);
-  GPIO_ResetBits (GPIOC, GPIO_Pin_1);
-  GPIO_ResetBits (GPIOC, GPIO_Pin_8);
+  Led_Lo2();
   vTaskDelay(301/portTICK_RATE_MS);
  }
 }
