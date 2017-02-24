@@ -14,9 +14,9 @@ CFLAGS	= 	-c -fno-common \
 		-mcpu=cortex-m3 \
 		-mthumb \
                 -g3 \
-                -DSTM32F10X_LD_VL \
-		-DSTM32F1
-#                -DSTM32F10X_MD
+                -DSTM32F10X_MD \
+		-DSTM32F1 
+#                -DSTM32F10X_LD_VL \
 
 #LDSCRIPT= ld/stm32_rom.ld
 #LDSCRIPT= ../ld/stm32_flash.ld
@@ -26,7 +26,7 @@ LDFLAGS	= -lopencm3_stm32f1 --static \
 	-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
 	-T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
 	-mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd 
-# 	-L~/sat/arm-none-eabi/lib/thumb/cortex-m3 \
+
 OCFLAGS	=	-Obinary
 
 ODFLAGS	=	-S
