@@ -47,8 +47,10 @@ void Usart1_Init(void)
  USART_Cmd(USART1,ENABLE);
 }
 
-void Led_Hi(void) {GPIO_SetBits   (GPIOC, GPIO_Pin_9);}
-void Led_Lo(void) {GPIO_ResetBits (GPIOC, GPIO_Pin_9);}
+void Led_Hi1(void) {GPIO_SetBits   (GPIOC, GPIO_Pin_8);}
+void Led_Lo1(void) {GPIO_ResetBits (GPIOC, GPIO_Pin_8);}
+void Led_Hi2(void) {GPIO_SetBits   (GPIOC, GPIO_Pin_9);}
+void Led_Lo2(void) {GPIO_ResetBits (GPIOC, GPIO_Pin_9);}
 
 /* Configure the LED GPIOs*/
 void Led_Init(void)
