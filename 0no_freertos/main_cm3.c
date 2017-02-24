@@ -1,12 +1,6 @@
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/usart.h>
-#include <libopencm3/stm32/f4/memorymap.h>
 #include "common.h"
 
-
 //#define avec_newlib
-
 #ifdef avec_newlib
 #include <errno.h>
 #include <stdio.h>
@@ -16,12 +10,10 @@ int _write(int file, char *ptr, int len);
 
 int main(void)
 { int i, c = 0;
-  Led_Init();
   Usart1_Init();
+  Led_Init();
   while (1) {
-    if (c&0x01) Led_Hi(); else Led_Lo();
-    gpio_toggle(GPIOC, GPIO9);
-    gpio_toggle(GPIOC, GPIO8);
+    if (c&0x01) {Led_Hi1();Led_Hi2();} else {Led_Lo1();Led_Lo2();}
     c = (c == 9) ? 0 : c + 1;	// cyclic increment c
 #ifndef avec_newlib
     uart_putc(c + '0'); // USART1: send byte
