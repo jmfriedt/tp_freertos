@@ -96,3 +96,5 @@ $(TARGET).elf: $(OBJS)
 	@echo "  CC $<"
 	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
 
+flash: output/main.bin
+	st-flash write output/main.bin 0x8000000

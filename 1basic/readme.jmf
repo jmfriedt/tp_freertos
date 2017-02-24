@@ -1,4 +1,6 @@
-verifie' en v9/libstm32 pour STM32F1
-verifie' en v7/libstm32 pour STM32F1
+verified FreeRTOS v7/libstm32 o STM32F1
+verified FreeRTOS v9/libstm32 on STM32F1
+verified FreeRTOS v9/libopencm3 on STM32F1
+verified FreeRTOS v9/libopencm3 on STM32F4
 
-/home/jmfriedt/enseignement/ufr/platforms/stm32/qemu/qemu_stm32/arm-softmmu/qemu-system-arm -M stm32-p103 -serial stdio -serial stdio -serial stdio -kernel output/main.bin 
+$HOME/qemu_stm32/arm-softmmu/qemu-system-arm -M stm32-p103 -serial stdio -serial stdio -serial stdio -kernel output/main.bin 

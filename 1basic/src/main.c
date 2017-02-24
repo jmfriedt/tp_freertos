@@ -11,6 +11,7 @@ int main(void){
  volatile int i;
  Usart1_Init(); // inits clock as well
  Led_Init();
+ Led_Hi1();
 
  if (!(pdPASS == xTaskCreate( vLedsFloat, (signed char*) "LedFloat",128,NULL,10,NULL ))) goto hell;
  if (!(pdPASS == xTaskCreate( vLedsFlash, (signed char*) "LedFlash",128,NULL,10,NULL ))) goto hell;
