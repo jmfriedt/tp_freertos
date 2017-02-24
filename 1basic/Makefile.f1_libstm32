@@ -34,22 +34,23 @@ TARGET  = 	$(OUTPUT_DIR)/main
 
 INCLUDE =   -I../\
 	    -I./src/ \
+	    -I../include \
 	    -I../fw_lib/include\
-	    -I../FreeRTOSv9.0.0/FreeRTOS/Source/include/ \
-	    -I../FreeRTOSv9.0.0/FreeRTOS/Source/portable/GCC/ARM_CM3/ \
+	    -I../../freertos/include/ \
+	    -I../../freertos/portable/GCC/ARM_CM3/ \
 	    -I../common
 
 
 # Add other source files if they are needed e.g. other Firmwarlib Components
 SRCS	=   ./src/main.c \
 	    ../common/usart_stm32.c \
-		../FreeRTOSv9.0.0/FreeRTOS/Source/timers.c \
-		../FreeRTOSv9.0.0/FreeRTOS/Source/portable/MemMang/heap_2.c \
-		../FreeRTOSv9.0.0/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
-		../FreeRTOSv9.0.0/FreeRTOS/Source/tasks.c \
-		../FreeRTOSv9.0.0/FreeRTOS/Source/queue.c \
-		../FreeRTOSv9.0.0/FreeRTOS/Source/croutine.c \
-		../FreeRTOSv9.0.0/FreeRTOS/Source/list.c \
+		../../freertos/timers.c \
+		../../freertos/portable/MemMang/heap_2.c \
+		../../freertos/portable/GCC/ARM_CM3/port.c \
+		../../freertos/tasks.c \
+		../../freertos/queue.c \
+		../../freertos/croutine.c \
+		../../freertos/list.c \
                 ../fw_lib/system_stm32f10x.c \
                 ../fw_lib/stm32f10x_it.c \
 		../fw_lib/stm32f10x_rcc.c \
@@ -57,19 +58,24 @@ SRCS	=   ./src/main.c \
 		../fw_lib/stm32f10x_gpio.c \
 		../fw_lib/stm32f10x_adc.c \
 		../fw_lib/stm32f10x_usart.c \
+#            ../../freertos/syscalls.c \
+
 
 OBJS=$(SRCS:.c=.o)
 
+
 .PHONY : clean all
+
 
 all: $(TARGET).bin  $(TARGET).list
 	@echo "  SIZE $(TARGET).elf"
 	$(SZ) $(TARGET).elf
 
+
 clean:
 	@echo "Removing files..."
 	-find . -name '*.o'   | xargs rm
-	-find ../FreeRTOSv9.0.0 -name '*.o'   | xargs rm
+	-find ../../freertos -name '*.o'   | xargs rm
 	-find . -name '*.elf' | xargs rm
 	-find . -name '*.lst' | xargs rm
 	-find . -name '*.out' | xargs rm
