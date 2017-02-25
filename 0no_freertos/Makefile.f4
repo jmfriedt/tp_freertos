@@ -17,7 +17,7 @@ usart_cm3.elf: main_cm3.o usart_cm3.o
 	arm-none-eabi-gcc -o usart_cm3.elf usart_cm3.o main_cm3.o -static \
             -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group -nostartfiles \
             -mthumb -mcpu=cortex-m4 -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
-            -T./stm32f4-discovery.ld -Wl,--gc-sections -lopencm3_stm32f4
+            -T../ld/stm32f4-discovery.ld -Wl,--gc-sections -lopencm3_stm32f4
 
 flash: usart_cm3.bin
 	st-flash --reset write usart_cm3.bin 0x8000000
