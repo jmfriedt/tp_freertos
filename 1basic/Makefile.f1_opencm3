@@ -96,3 +96,6 @@ $(TARGET).elf: $(OBJS)
 	@echo "  CC $<"
 	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
 
+flash: output/main.bin
+	stm32flash.sh -w output/main.bin /dev/ttyUSB0
+

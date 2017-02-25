@@ -8,26 +8,21 @@ void vLedsFloat(void* dummy);
 void vLedsFlash(void* dummy);
 void vPrintUart(void* dummy);
 
-
 void vLedsFloat(void* dummy)
 {while(1){
-      GPIO_SetBits (GPIOC, GPIO_Pin_2);
-      GPIO_SetBits (GPIOC, GPIO_Pin_9);
-          vTaskDelay(120/portTICK_RATE_MS);
-      GPIO_ResetBits (GPIOC, GPIO_Pin_2);
-      GPIO_ResetBits (GPIOC, GPIO_Pin_9);
-          vTaskDelay(120/portTICK_RATE_MS);
+    Led_Hi1(); 
+    vTaskDelay(120/portTICK_RATE_MS);
+    Led_Lo1();
+    vTaskDelay(120/portTICK_RATE_MS);
  }
 }
 
 void vLedsFlash(void* dummy)
 {while(1){
-        GPIO_SetBits (GPIOC, GPIO_Pin_1);
-        GPIO_SetBits (GPIOC, GPIO_Pin_8);
-        vTaskDelay(301/portTICK_RATE_MS);
-        GPIO_ResetBits (GPIOC, GPIO_Pin_1);
-        GPIO_ResetBits (GPIOC, GPIO_Pin_8);
-        vTaskDelay(301/portTICK_RATE_MS);
+    Led_Hi2();
+    vTaskDelay(301/portTICK_RATE_MS);
+    Led_Lo2();
+    vTaskDelay(301/portTICK_RATE_MS);
   }
 }
 
@@ -46,7 +41,7 @@ void task_tx(void* p)
 {int myInt = 0;
   while(1)
     {myInt++;
-     if(!xQueueSend(qh, &myInt, 500)) 
+     if(!xQueueSend(qh, &myInt, 100)) 
         {uart_puts("Failed to send item to queue within 500ms");
         }
      vTaskDelay(1000);
@@ -83,3 +78,4 @@ int main()
 hell: while(1) {};
     return 0;
 }
+

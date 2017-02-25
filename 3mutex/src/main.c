@@ -4,8 +4,13 @@
 #include "common.h"
 #include "stdlib.h" // rand
 
+#define avec_mutex
+
 int global=0;
-// xSemaphoreHandle xMutex;
+#ifdef avec_mutex
+xSemaphoreHandle xMutex;
+// SemaphoreHandle_t xMutex; // pour FreeRTOSv9
+#endif
 
 void vLedsFloat(void* dummy);
 void vLedsFlash(void* dummy);
@@ -18,7 +23,9 @@ void task_rx(void* p)
     volatile int local;
     for (myInt=0;myInt<8;myInt++)
     {
-//    xSemaphoreTake( xMutex, portMAX_DELAY );
+#ifdef avec_mutex
+    xSemaphoreTake( xMutex, portMAX_DELAY );
+#endif
          local=global;
          local++;
          uart_puts(t);  
@@ -28,7 +35,9 @@ void task_rx(void* p)
 // auront fait une somme de 8
          global=local;
     
-//    xSemaphoreGive( xMutex );
+#ifdef avec_mutex
+    xSemaphoreGive( xMutex );
+#endif
     vTaskDelay( ( rand() & 0x5 ) );  // essayer de deplacer le delay sous cette '}' pour ne pas alterner
     }
     aff[0]=' ';aff[1]=global+'0';aff[2]=' ';aff[3]=0;uart_puts(aff);
@@ -40,7 +49,9 @@ int main()
     Led_Init();
     Usart1_Init();
     srand( 567 );
-//  xMutex = xSemaphoreCreateMutex();
+#ifdef avec_mutex
+  xMutex = xSemaphoreCreateMutex();
+#endif
     xTaskCreate(task_rx, (signed char*)"t1", 128, "1111111111111111111111111111111111111111111\r\n\0", 1, 0);
     xTaskCreate(task_rx, (signed char*)"t2", 128, "2222222222222222222222222222222222222222222\r\n\0", 1, 0);
     vTaskStartScheduler();

@@ -76,7 +76,7 @@ all: $(TARGET).bin  $(TARGET).list
 clean:
 	@echo "Removing files..."
 	-find . -name '*.o'   | xargs rm
-	-find ../../freertos -name '*.o'   | xargs rm
+	-find ../freertos -name '*.o'   | xargs rm
 	-find . -name '*.elf' | xargs rm
 	-find . -name '*.lst' | xargs rm
 	-find . -name '*.out' | xargs rm
