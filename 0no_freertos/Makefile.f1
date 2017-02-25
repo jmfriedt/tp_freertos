@@ -47,3 +47,6 @@ usart_stm32.bin: main_stm32.o usart_stm32.o
 
 clean:
 	rm *.o *.bin *.d *.elf ../common/*.o
+
+flash: usart_cm3.bin
+	stm32flash.sh -w usart_cm3.bin /dev/ttyUSB0
