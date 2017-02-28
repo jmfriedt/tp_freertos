@@ -13,9 +13,9 @@ int main(void){
  Led_Init();
  Led_Hi1();
 
- if (!(pdPASS == xTaskCreate( vLedsFloat, (signed char*) "LedFloat",128,NULL,10,NULL ))) goto hell;
- if (!(pdPASS == xTaskCreate( vLedsFlash, (signed char*) "LedFlash",128,NULL,10,NULL ))) goto hell;
- if (!(pdPASS == xTaskCreate( vPrintUart, (signed char*) "Uart",    128,NULL,10,NULL ))) goto hell;
+ if (!(pdPASS == xTaskCreate( vLedsFloat, (signed char*) "LedFloat",64,NULL,1,NULL ))) goto hell;
+ if (!(pdPASS == xTaskCreate( vLedsFlash, (signed char*) "LedFlash",64,NULL,2,NULL ))) goto hell;
+ if (!(pdPASS == xTaskCreate( vPrintUart, (signed char*) "Uart",    64,NULL,3,NULL ))) goto hell;
 
  vTaskStartScheduler();
 hell:              // should never be reached

@@ -75,12 +75,14 @@
 #define configTICK_RATE_HZ			( ( portTickType ) 1000 )
 // #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 ) // JMF compatible v9
 #define configMAX_PRIORITIES		( 5 )
-#define configMINIMAL_STACK_SIZE	( ( unsigned short ) 10 )
+#define configMINIMAL_STACK_SIZE	( ( unsigned short ) 64 )
 #define configTOTAL_HEAP_SIZE		( ( size_t ) ( 5* 1024 ) )
 #define configMAX_TASK_NAME_LEN		( 16 )
-#define configUSE_TRACE_FACILITY	0
+
 #define configUSE_16_BIT_TICKS		0
 #define configIDLE_SHOULD_YIELD		1
+
+#define INCLUDE_uxTaskGetStackHighWaterMark 1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		0

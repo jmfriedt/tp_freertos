@@ -14,9 +14,9 @@ CFLAGS	= 	-c -fno-common \
 		-mcpu=cortex-m3 \
 		-mthumb \
                 -g3 \
-                -DSTM32F10X_MD \
+                -DSTM32F10X_LD_VL \
 		-DSTM32F1 
-#                -DSTM32F10X_LD_VL \
+#                -DSTM32F10X_MD \
 
 LDSCRIPT= ../ld/stm32vl-discovery.ld
 
@@ -97,5 +97,6 @@ $(TARGET).elf: $(OBJS)
 	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
 
 flash: output/main.bin
-	stm32flash.sh -w output/main.bin /dev/ttyUSB0
+	st-flash write output/main.bin 0x8000000
+#	stm32flash.sh -w output/main.bin /dev/ttyUSB0
 
