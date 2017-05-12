@@ -1,0 +1,10 @@
+void init_Usart(void);
+void putChar(uint8_t ch);
+void putString(uint8_t* buf);
+void putHexa16(uint16_t var);
+void putHexa32(uint32_t var);
+void putDec16(uint16_t var);
+void putDec32(uint32_t var);
+uint8_t getCharBlocking(void);
+uint8_t getChar(void);
+void getString(uint8_t* buf, uint8_t size);
