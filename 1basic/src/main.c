@@ -1,27 +1,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "common.h"
-#include <stm32/gpio.h>
-
-void vLedsFloat(void* dummy);
-void vLedsFlash(void* dummy);
-void vPrintUart(void* dummy);
-
-int main(void){
- volatile int i;
- Usart1_Init(); // inits clock as well
- Led_Init();
- Led_Hi1();
-
- if (!(pdPASS == xTaskCreate( vLedsFloat, (signed char*) "LedFloat",64,NULL,1,NULL ))) goto hell;
- if (!(pdPASS == xTaskCreate( vLedsFlash, (signed char*) "LedFlash",64,NULL,2,NULL ))) goto hell;
- if (!(pdPASS == xTaskCreate( vPrintUart, (signed char*) "Uart",    64,NULL,3,NULL ))) goto hell;
-
- vTaskStartScheduler();
-hell:              // should never be reached
-	while(1);
-    return 0;
-}
 
 void vLedsFloat(void* dummy)
 {while(1){
@@ -49,3 +28,20 @@ void vPrintUart(void* dummy)
 	  vTaskDelayUntil(&last_wakeup_time, 500/portTICK_RATE_MS);
 	}
 }
+
+int main(void){
+ volatile int i;
+ Usart1_Init(); // inits clock as well
+ Led_Init();
+ Led_Hi1();
+
+ if (!(pdPASS == xTaskCreate( vLedsFloat, (signed char*) "LedFloat",64,NULL,1,NULL ))) goto hell;
+ if (!(pdPASS == xTaskCreate( vLedsFlash, (signed char*) "LedFlash",64,NULL,2,NULL ))) goto hell;
+ if (!(pdPASS == xTaskCreate( vPrintUart, (signed char*) "Uart",    64,NULL,3,NULL ))) goto hell;
+
+ vTaskStartScheduler();
+hell:              // should never be reached
+	while(1);
+    return 0;
+}
+

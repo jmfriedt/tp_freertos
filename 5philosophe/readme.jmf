@@ -10,3 +10,12 @@ A prend les baguettes
 3 = D a fini de manger et poses ses baguettes
 C prend les baguettes, 0 = A a fini de manger
 2 = C a fini de manger
+
+
+/home/jmfriedt/enseignement/ufr/platforms/stm32/qemu/qemu_stm32/arm-softmmu/qemu-system-arm -M stm32-p103 -serial stdio -kernel output/main.bin 
+
+
+eabcdzEwBy4v1xDAoc30xC2 # avec 500 ms
+
+eabcdzEwBypd4v1xCA20yD3 # avec 100 ms
+

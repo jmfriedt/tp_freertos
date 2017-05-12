@@ -4,7 +4,7 @@
 #include "common.h"
 
 int globale=0;
-//#define avec_sema
+#define avec_sema
 
 #ifdef avec_sema
 xSemaphoreHandle event_signal;
@@ -37,7 +37,7 @@ void task2(void* p)
 #endif
     globale=1;
     uart_puts("sem give\r\n\0");
-    vTaskDelay( 700/portTICK_RATE_MS );  // remplacer 400 par 700 !
+    vTaskDelay(1700/portTICK_RATE_MS );  // remplacer 400 par 700 !
   }
 }
 
@@ -49,8 +49,8 @@ int main()
     vSemaphoreCreateBinary( event_signal );   // Create the semaphore
     xSemaphoreTake(event_signal, 0);          // Take semaphore after creating it.
 #endif
- xTaskCreate(task1, (signed char*)"t1", (256), 0, 2, 0);
- xTaskCreate(task2, (signed char*)"t2", (256), 0, 1, 0);
+ xTaskCreate(task1, (signed char*)"t1", (256), 0, 1, 0);
+ xTaskCreate(task2, (signed char*)"t2", (256), 0, 2, 0);
  vTaskStartScheduler();
  
 hell:
