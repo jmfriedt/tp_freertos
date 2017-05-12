@@ -19,7 +19,6 @@ void init_SPI(void)
 
 void init_DDS(void)
 {
-	volatile uint64_t i;
 	init_SPI();
 	gpio_clear(GPIOA, SLEEP);
 	//Reset du DDS
@@ -45,7 +44,6 @@ void set_Freq(uint32_t outFrequency, uint8_t inFrequency)
 
 void set_FreqWord(uint32_t frequency)
 {
-	volatile uint64_t i;
 	gpio_clear(GPIOA, NSS);
 	spi_send(SPI1, (frequency&0x3FFF)|0x4000);
 	delay(0x500);
@@ -72,7 +70,6 @@ void set_FreqWord(uint32_t frequency)
 
 void set_Phase(uint16_t value)
 {
-	volatile uint64_t i;
 	gpio_clear(GPIOA, NSS);
 	spi_send(SPI1, (value&0xFFF)|0xC000);
 	delay(0x500);

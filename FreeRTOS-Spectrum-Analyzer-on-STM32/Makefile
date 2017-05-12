@@ -6,7 +6,7 @@ FREERTOSDIR=/home/jmfriedt/enseignement/ufr/platforms/stm32/F1/FreeRTOSv9.0.0/Fr
 DEV=DSTM32F4
 MCPU=cortex-m4
 
-CFLAGS=	-c \
+CFLAGS=	-c -Wall \
 		-fno-common \
 		-ffunction-sections \
 		-fdata-sections \

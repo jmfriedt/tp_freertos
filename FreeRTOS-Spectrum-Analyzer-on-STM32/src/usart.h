@@ -1,6 +1,6 @@
 void init_Usart(void);
-void putChar(uint8_t ch);
-void putString(uint8_t* buf);
+void putChar(char ch);
+void putString(char* buf);
 void putHexa16(uint16_t var);
 void putHexa32(uint32_t var);
 void putDec16(uint16_t var);

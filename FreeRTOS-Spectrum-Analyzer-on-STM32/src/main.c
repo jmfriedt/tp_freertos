@@ -46,11 +46,9 @@ int main (void)
 	if(xQueueParams == NULL) goto hell;
 
 	
-	if (!(pdPASS == xTaskCreate(vLedsFlash,(signed char*) "LedFlash",128,NULL,10, &xTaskLeds ))) goto hell;
-	if (!(pdPASS == xTaskCreate(vGetCommand,(signed char*) "GetCommand",128,NULL,10, &xTaskOver ))) goto hell;
-	if (!(pdPASS == xTaskCreate(vDoMesure,(signed char*) "DoMesure",128,NULL,10, &xTaskDo ))) goto hell;
-
-	
+	if (!(pdPASS == xTaskCreate(vLedsFlash,(char*) "LedFlash",128,NULL,10, &xTaskLeds ))) goto hell;
+	if (!(pdPASS == xTaskCreate(vGetCommand,(char*)"GetCommand",128,NULL,10, &xTaskOver ))) goto hell;
+	if (!(pdPASS == xTaskCreate(vDoMesure,(char*) "DoMesure",128,NULL,10, &xTaskDo ))) goto hell;
 	vTaskStartScheduler();
 	
 	
@@ -94,7 +92,8 @@ void shutdownLeds(void)
 
 void vGetCommand(void* dummy)
 {
-	char buffer[100], newCar, curCar, caracs=0, cmdIndex=0;
+	char buffer[100], newCar, cmdIndex=0;
+	int caracs=0, curCar;
 	uint64_t temp=0;
 	struct AMessage pxSendMessage;
 	putString("Enter the following command:\r\n");
@@ -186,7 +185,7 @@ void vDoMesure(void* dummy)
 	//30678337->8MHz
 	struct AMessage pxRecvMessage;
 	uint32_t frequency, somMoyMag, somMoyPha;
-	uint8_t flag=0, moy;
+	uint8_t moy;
 	while(1)
 	{
 		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);//On attend d'être débloqué

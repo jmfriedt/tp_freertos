@@ -13,12 +13,12 @@ void init_Usart(void)
 	usart_enable(USART1);
 }
 
-void putChar(uint8_t ch)
+void putChar(char ch)
 {
 	usart_send_blocking(USART1, ch);
 }
 
-void putString(uint8_t* buf)
+void putString(char* buf)
 {
 	volatile uint8_t i=0;
 	
