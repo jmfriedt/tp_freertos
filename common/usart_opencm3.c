@@ -66,15 +66,15 @@ void Usart1_Init(void)
 void Led_Init(void)
 {
 #ifdef STM32F1
- gpio_set_mode(GPIOC,GPIO_MODE_OUTPUT_2_MHZ,GPIO_CNF_OUTPUT_PUSHPULL,GPIO8|GPIO9|GPIO1|GPIO2);
+ gpio_set_mode(GPIOC,GPIO_MODE_OUTPUT_2_MHZ,GPIO_CNF_OUTPUT_PUSHPULL,GPIO8|GPIO9|GPIO1|GPIO2|GPIO12);
 #else
  gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT,GPIO_PUPD_NONE, GPIO12|GPIO13|GPIO14|GPIO15); 
 #endif
 }
 
 #ifdef STM32F1
-void Led_Hi1(void) {gpio_set  (GPIOC, GPIO9);gpio_set  (GPIOC, GPIO2);}
-void Led_Lo1(void) {gpio_clear(GPIOC, GPIO9);gpio_clear(GPIOC, GPIO2);}
+void Led_Hi1(void) {gpio_set  (GPIOC, GPIO9);gpio_set  (GPIOC, GPIO2);gpio_set  (GPIOC, GPIO12);}
+void Led_Lo1(void) {gpio_clear(GPIOC, GPIO9);gpio_clear(GPIOC, GPIO2);gpio_clear(GPIOC, GPIO12);}
 void Led_Hi2(void) {gpio_set  (GPIOC, GPIO8);gpio_set  (GPIOC, GPIO1);}
 void Led_Lo2(void) {gpio_clear(GPIOC, GPIO8);gpio_clear(GPIOC, GPIO1);}
 #else
