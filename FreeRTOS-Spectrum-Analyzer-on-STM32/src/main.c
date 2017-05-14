@@ -44,8 +44,6 @@ int main (void)
 	xQueueParams = xQueueCreate(1, sizeof(struct AMessage));
 	
 	if(xQueueParams == NULL) goto hell;
-
-	
 	if (!(pdPASS == xTaskCreate(vLedsFlash,(char*) "LedFlash",128,NULL,10, &xTaskLeds ))) goto hell;
 	if (!(pdPASS == xTaskCreate(vGetCommand,(char*)"GetCommand",128,NULL,10, &xTaskOver ))) goto hell;
 	if (!(pdPASS == xTaskCreate(vDoMesure,(char*) "DoMesure",128,NULL,10, &xTaskDo ))) goto hell;
@@ -151,14 +149,12 @@ void vGetCommand(void* dummy)
 			
 			if(cmdIndex>4)//On a tout rempli
 			{
-				xQueueSendToBack(xQueueParams, &pxSendMessage, 100);
 				vTaskSuspend(xTaskLeds);//On éteint les leds
 				shutdownLeds();
 				putString("\r\n");
 
-				xTaskNotifyGive(xTaskDo);//On lance le scan
-				
-				ulTaskNotifyTake(pdTRUE, portMAX_DELAY);//On attend d'être débloqué
+				xQueueSend(xQueueParams, &pxSendMessage, 100);
+				ulTaskNotifyTake(pdTRUE, portMAX_DELAY);        // On attend d'être débloqué
 				putString("Enter the following command:\r\n");
 				putString("StartFreq(Hz)/EndFreq(Hz)/FreqStep(Hz)/FreqDelay(ms)/Average(n)0\r\n:");
 			}
@@ -181,15 +177,13 @@ void vGetCommand(void* dummy)
 }
 
 void vDoMesure(void* dummy)
-{
-	//30678337->8MHz
+{       //30678337->8MHz
 	struct AMessage pxRecvMessage;
 	uint32_t frequency, somMoyMag, somMoyPha;
 	uint8_t moy;
 	while(1)
 	{
-		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);//On attend d'être débloqué
-		if(xQueueReceive(xQueueParams, &pxRecvMessage, 100))
+		if(xQueueReceive(xQueueParams, &pxRecvMessage, portMAX_DELAY))
 		{
 		  for (frequency=pxRecvMessage.startFreq;frequency<=pxRecvMessage.endFreq;
                        frequency+=pxRecvMessage.stepFreq)
@@ -216,7 +210,7 @@ void vDoMesure(void* dummy)
 		putString("END\r\n");
 		vTaskResume(xTaskLeds);
 		xTaskNotifyGive(xTaskOver);//On lance l'interface
-		if(getChar()==3)//Si on reçoit un ordre d'arrêt
+		if(getChar()==3)      //Si on reçoit un ordre d'arrêt
 		{
 			vTaskResume(xTaskLeds);
 			xTaskNotifyGive(xTaskOver);//On lance l'interface
