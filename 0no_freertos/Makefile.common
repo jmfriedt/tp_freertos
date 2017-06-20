@@ -1,0 +1,22 @@
+all: usart_cm3.bin 
+
+# CFLAGS=-DSTM32F1 -DSTM32F10X_LD_VL -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd # STM32F100=Low Dev/Value Line
+CFLAGS=-DSTM32F1 -DSTM32F10X_MD -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  # STM32F103 = Medium Device
+# CFLAGS=-DSTM32F4 -mcpu=cortex-m4 -mhard-float        # STM32F410
+
+LDFLAGS=-T../ld/stm32vl-discovery.ld -lopencm3_stm32f1 # STM32F1xx (8 KB RAM)
+# LDFLAGS=-T../ld/stm32f4-discovery.ld   -lopencm3_stm32f4 # STM32F410
+
+main_cm3.o: main_cm3.c
+	arm-none-eabi-gcc -Wall -I../common -fno-common -mthumb -MD $(CFLAGS) -c main_cm3.c
+
+usart_cm3.o: ../common/usart_opencm3.c
+	arm-none-eabi-gcc -Wall -I../common -fno-common -mthumb -MD $(CFLAGS) \
+	    -o usart_cm3.o -c ../common/usart_opencm3.c
+
+usart_cm3.bin: main_cm3.o usart_cm3.o
+	arm-none-eabi-gcc -o usart_cm3.elf usart_cm3.o main_cm3.o --static $(LDFLAGS) -nostartfiles -mthumb
+	arm-none-eabi-objcopy -O binary usart_cm3.elf usart_cm3.bin	
+
+clean:
+	rm *.o *.bin *.d *.elf ../common/*.o
