@@ -4,17 +4,13 @@
 #include "common.h"
 #include "stdlib.h" // rand
 
-#define avec_mutex
+//#define avec_mutex
 
-int global=0;
+volatile int global=0;
 #ifdef avec_mutex
 xSemaphoreHandle xMutex;
 // SemaphoreHandle_t xMutex; // pour FreeRTOSv9
 #endif
-
-void vLedsFloat(void* dummy);
-void vLedsFlash(void* dummy);
-void vPrintUart(void* dummy);
 
 void task_rx(void* p)
 {   char aff[10];
