@@ -2,15 +2,15 @@ all: usart_cm3.bin usart_stm32.bin pwm_cm3.bin
 
 #libopencm3 examples
 main_cm3.o: main_cm3.c
-	arm-none-eabi-gcc -Wall -I../common -fno-common -mthumb -mcpu=cortex-m3 \
+	arm-none-eabi-gcc -g -Wall -I../common -fno-common -mthumb -mcpu=cortex-m3 \
            -msoft-float -MD -DSTM32F1 -DSTM32F10X_LD_VL -c main_cm3.c
 
 usart_cm3.o: ../common/usart_opencm3.c
-	arm-none-eabi-gcc -Wall -I../common -fno-common -mthumb -mcpu=cortex-m3 \
+	arm-none-eabi-gcc -g -Wall -I../common -fno-common -mthumb -mcpu=cortex-m3 \
            -msoft-float -MD -DSTM32F1 -DSTM32F10X_LD_VL -o usart_cm3.o -c ../common/usart_opencm3.c
 
 usart_cm3.bin: main_cm3.o usart_cm3.o
-	arm-none-eabi-gcc -o usart_cm3.elf usart_cm3.o main_cm3.o  \
+	arm-none-eabi-gcc -g -o usart_cm3.elf usart_cm3.o main_cm3.o  \
 	    --static -T../ld/stm32vl-discovery.ld -nostartfiles -Wl,--gc-sections -mthumb \
             -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd -lopencm3_stm32f1
 	arm-none-eabi-objcopy -O binary usart_cm3.elf usart_cm3.bin	
