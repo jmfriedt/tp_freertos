@@ -19,7 +19,7 @@ CFLAGS	= 	-c -fno-common \
 
 #LDSCRIPT= ld/stm32_rom.ld
 #LDSCRIPT= ../ld/stm32_flash.ld
-LDSCRIPT=  ../0no_freertos/stm32f4-discovery.ld
+LDSCRIPT=  ../ld/stm32f4-discovery.ld
 
 LDFLAGS	= -lopencm3_stm32f4 --static \
 	-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
