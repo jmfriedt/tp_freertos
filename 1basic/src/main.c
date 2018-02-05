@@ -24,6 +24,7 @@ void vLedsFlash(void* dummy)
 void vPrintUart(void* dummy)
 {portTickType last_wakeup_time;
  last_wakeup_time = xTaskGetTickCount();
+ // while (1) {}
  while(1){uart_puts("Hello World\r\n");
 	  vTaskDelayUntil(&last_wakeup_time, 500/portTICK_RATE_MS);
 	}

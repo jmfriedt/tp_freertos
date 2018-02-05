@@ -16,7 +16,7 @@ int main(void)
     if (c&0x01) {Led_Hi1();Led_Hi2();} else {Led_Lo1();Led_Lo2();}
     c = (c == 9) ? 0 : c + 1;	// cyclic increment c
 #ifndef avec_newlib
-    uart_putc(c + '0'); // USART1: send byte
+    uart_putc(c + '0'); // USART: send byte
     uart_puts("\r\n\0");
 #else
     printf("%d\r\n", (int)c); 

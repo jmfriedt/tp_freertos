@@ -20,7 +20,9 @@ usart_cm3.elf: main_cm3.o usart_cm3.o
             -T../ld/stm32f4-discovery.ld -Wl,--gc-sections -lopencm3_stm32f4
 
 flash: usart_cm3.bin
-	st-flash --reset write usart_cm3.bin 0x8000000
+	st-flash --reset write usart_cm3.bin 0x8000000   # disco board
+#	stm32flash.sh -w usart_cm3.bin /dev/ttyUSB0      # netwk analyzer
+
 
 clean:
 	rm *.o *.bin *.d *.elf ../common/*.o
