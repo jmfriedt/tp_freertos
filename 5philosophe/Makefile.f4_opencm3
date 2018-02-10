@@ -98,5 +98,4 @@ $(TARGET).elf: $(OBJS)
 	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
 
 flash: output/main.bin
-	stm32flash.sh -w output/main.bin /dev/ttyUSB0
-	# st-flash write output/main.bin 0x8000000
+	st-flash write output/main.bin 0x8000000

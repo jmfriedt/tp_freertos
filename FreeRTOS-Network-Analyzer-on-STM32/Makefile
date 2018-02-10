@@ -19,7 +19,7 @@ CFLAGS=	-c -Wall \
 		-hard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16
 		
 LDFLAGS=-lopencm3_stm32f4 --static \
-		-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
+		-Wl,--start-group -Wl,--end-group \
 		-T $(LDDIR)/stm32f4.ld -nostartfiles -Wl,--gc-sections -mthumb \
 		-MD -mcpu=$(MCPU) -hard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
