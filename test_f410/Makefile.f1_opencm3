@@ -14,11 +14,13 @@ CFLAGS	= 	-c -fno-common \
 		-mcpu=cortex-m3 \
 		-mthumb \
                 -g3 \
-		-DSTM32F1 \
-                -DSTM32F10X_MD
+                -DSTM32F10X_MD \
+		-DSTM32F1 
 #                -DSTM32F10X_LD_VL \
 
-LDSCRIPT= ../ld/stm32vl-discovery.ld
+#LDSCRIPT= ld/stm32_rom.ld
+#LDSCRIPT= ../ld/stm32_flash.ld
+LDSCRIPT= ../0no_freertos/stm32vl-discovery.ld
 
 LDFLAGS	= -lopencm3_stm32f1 --static \
 	-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
@@ -37,8 +39,8 @@ TARGET  = 	$(OUTPUT_DIR)/main
 
 INCLUDE =   -I../\
 	    -I./src/ \
-	    -I../../FreeRTOSv10.0.0/FreeRTOS/Source/include/ \
-	    -I../../FreeRTOSv10.0.0/FreeRTOS/Source/portable/GCC/ARM_CM3/ \
+	    -I../../FreeRTOSv9.0.0/FreeRTOS/Source/include/ \
+	    -I../../FreeRTOSv9.0.0/FreeRTOS/Source/portable/GCC/ARM_CM3/ \
 	    -I../common
 
 
@@ -46,13 +48,13 @@ INCLUDE =   -I../\
 SRCS	=   ./src/main.c \
 	    ../common/freertos_opencm3.c \
 	    ../common/usart_opencm3.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/timers.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/portable/MemMang/heap_2.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/tasks.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/queue.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/croutine.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/list.c 
+		../../FreeRTOSv9.0.0/FreeRTOS/Source/timers.c \
+		../../FreeRTOSv9.0.0/FreeRTOS/Source/portable/MemMang/heap_2.c \
+		../../FreeRTOSv9.0.0/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
+		../../FreeRTOSv9.0.0/FreeRTOS/Source/tasks.c \
+		../../FreeRTOSv9.0.0/FreeRTOS/Source/queue.c \
+		../../FreeRTOSv9.0.0/FreeRTOS/Source/croutine.c \
+		../../FreeRTOSv9.0.0/FreeRTOS/Source/list.c 
 
 OBJS=$(SRCS:.c=.o)
 
@@ -65,7 +67,7 @@ all: $(TARGET).bin  $(TARGET).list
 clean:
 	@echo "Removing files..."
 	-find . -name '*.o'   | xargs rm
-	-find ../../FreeRTOSv10.0.0/FreeRTOS/Source -name '*.o'   | xargs rm
+	-find ../../FreeRTOSv9.0.0/FreeRTOS/Source -name '*.o'   | xargs rm
 	-find . -name '*.elf' | xargs rm
 	-find . -name '*.lst' | xargs rm
 	-find . -name '*.out' | xargs rm
@@ -95,8 +97,4 @@ $(TARGET).elf: $(OBJS)
 %.o: %.S
 	@echo "  CC $<"
 	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
-
-flash: output/main.bin
-	st-flash write output/main.bin 0x8000000
-#	stm32flash.sh -w output/main.bin /dev/ttyUSB0
 
