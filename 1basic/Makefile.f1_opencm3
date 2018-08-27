@@ -23,7 +23,8 @@ LDSCRIPT= ../ld/stm32vl-discovery.ld
 LDFLAGS	= -lopencm3_stm32f1 --static \
 	-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
 	-T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
-	-mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd 
+	-mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  \
+        -L$(HOME)/sat/arm-none-eabi/lib
 
 OCFLAGS	=	-Obinary
 
@@ -39,7 +40,8 @@ INCLUDE =   -I../\
 	    -I./src/ \
 	    -I../../FreeRTOSv10.0.0/FreeRTOS/Source/include/ \
 	    -I../../FreeRTOSv10.0.0/FreeRTOS/Source/portable/GCC/ARM_CM3/ \
-	    -I../common
+	    -I../common \
+            -I$(HOME)/sat/arm-none-eabi/include
 
 
 # Add other source files if they are needed e.g. other Firmwarlib Components

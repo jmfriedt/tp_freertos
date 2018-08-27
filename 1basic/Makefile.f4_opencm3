@@ -21,10 +21,13 @@ CFLAGS	= 	-c -fno-common \
 #LDSCRIPT= ../ld/stm32_flash.ld
 LDSCRIPT=  ../ld/stm32f4-discovery.ld
 
-LDFLAGS	= -lopencm3_stm32f4 --static \
-	-Wl,--start-group -Wl,--end-group \
-	-T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
-        -MD -mcpu=cortex-m4 -hard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16
+LDFLAGS = -lopencm3_stm32f4 --static \
+        -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
+        -T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
+        -MD -mcpu=cortex-m4 -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
+        -L$(HOME)/sat/arm-none-eabi/lib
+# -lc -lgcc -lnosys necessaires pour afficher vTaskList
+
 
 OCFLAGS	=	-Obinary
 
@@ -38,22 +41,23 @@ TARGET  = 	$(OUTPUT_DIR)/main
 
 INCLUDE =   -I../\
 	    -I./src/ \
-	    -I../../FreeRTOSv9.0.0/FreeRTOS/Source/include/ \
-	    -I../../FreeRTOSv9.0.0/FreeRTOS/Source/portable/GCC/ARM_CM4F/ \
-	    -I../common
+	    -I../../FreeRTOSv10.0.0/FreeRTOS/Source/include/ \
+	    -I../../FreeRTOSv10.0.0/FreeRTOS/Source/portable/GCC/ARM_CM4F/ \
+	    -I../common \
+ 	    -I$(HOME)/sat/arm-none-eabi/include/
 
 # Add other source files if they are needed e.g. other Firmwarlib Components
 SRCS	=   ./src/main.c \
 	    ../common/freertos_opencm3.c \
 	    ../common/usart_opencm3.c \
 	    ../common/stm32f4_initialisation.c \
-		../../FreeRTOSv9.0.0/FreeRTOS/Source/timers.c \
-		../../FreeRTOSv9.0.0/FreeRTOS/Source/portable/MemMang/heap_2.c \
-		../../FreeRTOSv9.0.0/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
-		../../FreeRTOSv9.0.0/FreeRTOS/Source/tasks.c \
-		../../FreeRTOSv9.0.0/FreeRTOS/Source/queue.c \
-		../../FreeRTOSv9.0.0/FreeRTOS/Source/croutine.c \
-		../../FreeRTOSv9.0.0/FreeRTOS/Source/list.c 
+		../../FreeRTOSv10.0.0/FreeRTOS/Source/timers.c \
+		../../FreeRTOSv10.0.0/FreeRTOS/Source/portable/MemMang/heap_2.c \
+		../../FreeRTOSv10.0.0/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
+		../../FreeRTOSv10.0.0/FreeRTOS/Source/tasks.c \
+		../../FreeRTOSv10.0.0/FreeRTOS/Source/queue.c \
+		../../FreeRTOSv10.0.0/FreeRTOS/Source/croutine.c \
+		../../FreeRTOSv10.0.0/FreeRTOS/Source/list.c 
 
 OBJS=$(SRCS:.c=.o)
 
@@ -66,7 +70,7 @@ all: $(TARGET).bin  $(TARGET).list
 clean:
 	@echo "Removing files..."
 	-find . -name '*.o'   | xargs rm
-	-find ../../FreeRTOSv9.0.0/FreeRTOS/Source -name '*.o'   | xargs rm
+	-find ../../FreeRTOSv10.0.0/FreeRTOS/Source -name '*.o'   | xargs rm
 	-find . -name '*.elf' | xargs rm
 	-find . -name '*.lst' | xargs rm
 	-find . -name '*.out' | xargs rm

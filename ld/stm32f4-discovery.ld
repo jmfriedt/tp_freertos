@@ -24,9 +24,10 @@
 MEMORY
 {
 	rom (rx) : ORIGIN = 0x08000000, LENGTH = 128K
-	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 32K
+	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 26K
 }
 
 /* Include the common ld script. */
-INCLUDE libopencm3_stm32f4.ld
+/* INCLUDE libopencm3_stm32f4.ld <- old version of libopencm3 linker scripts */
+INCLUDE cortex-m-generic.ld
 
