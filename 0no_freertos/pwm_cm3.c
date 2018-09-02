@@ -15,7 +15,8 @@ void pwm_init_timer(volatile uint32_t *reg, uint32_t en, uint32_t timer_peripher
 {
       rcc_peripheral_enable_clock(reg, en);
 
-      timer_reset(timer_peripheral);
+      // timer_reset(timer_peripheral); // old libopencm3
+      rcc_periph_reset_pulse(timer_peripheral);
 
       timer_set_mode(timer_peripheral,
                      TIM_CR1_CKD_CK_INT,
