@@ -15,9 +15,9 @@ void pwm_init_timer(volatile uint32_t *reg, uint32_t en, uint32_t timer_peripher
 {
       rcc_peripheral_enable_clock(reg, en);
 
-      // timer_reset(timer_peripheral); // old libopencm3
-      // rcc_periph_reset_pulse(timer_peripheral);
-      rcc_periph_reset_pulse(RST_TIM2);
+      //timer_reset(timer_peripheral); // modification du 180826 /w new libopencm3 version
+      rcc_periph_reset_pulse(RST_TIM1); // voir https://github.com/libopencm3/libopencm3-examples/commits/master/examples/stm32/f1/lisa-m-2/adc_injec_timtrig correction 16/12/2016
+
 
       timer_set_mode(timer_peripheral,
                      TIM_CR1_CKD_CK_INT,
