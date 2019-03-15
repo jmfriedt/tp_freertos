@@ -2,7 +2,6 @@
 #include "task.h"
 #include "queue.h"
 #include "common.h"
-#include <stm32/gpio.h>
 
 void vLedsFloat(void* dummy);
 void vLedsFlash(void* dummy);
