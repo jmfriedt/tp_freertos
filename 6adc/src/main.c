@@ -3,9 +3,6 @@
 #include "semphr.h"
 #include "common.h"
 
-#include <stm32/gpio.h>
-#include <stm32/adc.h>
-
 #define avec_mutex
 
 unsigned short readADC1(unsigned char );
