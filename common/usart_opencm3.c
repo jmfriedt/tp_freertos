@@ -3,13 +3,13 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
 #include <stdint.h>
+#include "avec_newlib.h"
 #include "common.h"
 #ifndef STM32F1
 #include "stm32f4_initialisation.h"
 #endif
 
 #define usart1        // comment for STM32F4Discovery
-//#define avec_newlib
 
 #ifdef avec_newlib
 #include <errno.h>

@@ -4,12 +4,12 @@ usart_cm3.bin: usart_cm3.elf
 	arm-none-eabi-objcopy -O binary usart_cm3.elf usart_cm3.bin	
 
 usart_cm3.o: ../common/usart_opencm3.c
-	arm-none-eabi-gcc -Wall -I~/sat/arm-none-eabi/include \
+	arm-none-eabi-gcc -Wall -I$(HOME)/sat/arm-none-eabi/include \
         -fno-common -mthumb -mcpu=cortex-m4 -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
         -MD -DSTM32F4 -o usart_cm3.o -c ../common/usart_opencm3.c
 
 main_cm3.o: main_cm3.c
-	arm-none-eabi-gcc -Wall -I~/sat/arm-none-eabi/include -I../common \
+	arm-none-eabi-gcc -Wall -I$(HOME)/sat/arm-none-eabi/include -I../common \
         -fno-common -mthumb -mcpu=cortex-m4 -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
         -MD -DSTM32F4 -c main_cm3.c
 
@@ -17,10 +17,11 @@ usart_cm3.elf: main_cm3.o usart_cm3.o stm32f4_initialisation.o
 	arm-none-eabi-gcc -o usart_cm3.elf usart_cm3.o main_cm3.o stm32f4_initialisation.o -static \
             -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group -nostartfiles \
             -mthumb -mcpu=cortex-m4 -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
+	    -L$(HOME)/sat/arm-none-eabi/lib \
             -T../ld/stm32f4-discovery.ld -Wl,--gc-sections -lopencm3_stm32f4
 
 stm32f4_initialisation.o: ../common/stm32f4_initialisation.c
-	arm-none-eabi-gcc -Wall -I~/sat/arm-none-eabi/include -I../common \
+	arm-none-eabi-gcc -Wall -I$(HOME)/sat/arm-none-eabi/include -I../common \
         -fno-common -mthumb -mcpu=cortex-m4 -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
         -MD -DSTM32F4 -o stm32f4_initialisation.o -c ../common/stm32f4_initialisation.c
 

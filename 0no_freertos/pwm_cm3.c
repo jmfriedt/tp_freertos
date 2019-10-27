@@ -2,7 +2,6 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/stm32/timer.h>
-#include <libopencm3/stm32/f4/memorymap.h>
 #include "common.h"
 
 void pwm_init_timer(volatile uint32_t *, uint32_t, uint32_t, uint32_t, uint32_t);

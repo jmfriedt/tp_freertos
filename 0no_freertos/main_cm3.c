@@ -1,6 +1,7 @@
 #include "common.h"
 
-//#define avec_newlib
+#include "../common/avec_newlib.h"
+
 #ifdef avec_newlib
 #include <errno.h>
 #include <stdio.h>
