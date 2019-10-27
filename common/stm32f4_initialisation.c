@@ -18,6 +18,7 @@ const struct rcc_clock_scale rcc_hse_20mhz_3v3 = {
                 .hpre = RCC_CFGR_HPRE_DIV_NONE,
                 .ppre1 = RCC_CFGR_PPRE_DIV_4,
                 .ppre2 = RCC_CFGR_PPRE_DIV_2,
+                .pll_source = RCC_CFGR_PLLSRC_HSE_CLK, // 190913 mandatory to use external clock (!=HSI)
                 .flash_config = FLASH_ACR_ICEN | FLASH_ACR_DCEN |
                                 FLASH_ACR_LATENCY_4WS, // 4 WS d'apres configuration par ST
                 .ahb_frequency  = 140000000,  
