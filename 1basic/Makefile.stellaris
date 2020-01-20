@@ -1,5 +1,3 @@
-PATH := /home/jmfriedt/enseignement/ufr/platforms/stm32/qemu/qemu_stm32/arm-softmmu/:$(PATH)
-
 CROSS_COMPILE =arm-none-eabi-
 CC		= $(CROSS_COMPILE)gcc
 LD		= $(CROSS_COMPILE)ld
@@ -9,24 +7,18 @@ OC		= $(CROSS_COMPILE)objcopy
 OD		= $(CROSS_COMPILE)objdump
 SZ		= $(CROSS_COMPILE)size
 
-CFLAGS	= 	-c -fno-common \
-		-ffunction-sections \
-		-fdata-sections \
-		-Os \
-		-mcpu=cortex-m3 \
-		-mthumb \
-                -g3 \
-		-DSTM32F1 \
-                -DSTM32F10X_MD
-#                -DSTM32F10X_LD_VL \
-
-LDSCRIPT= ../ld/stm32vl-discovery.ld
-
-LDFLAGS	= -lopencm3_stm32f1 --static \
+CFLAGS =  -Wall -Os
+CFLAGS += -mthumb -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mcpu=cortex-m4 -DLM4F
+CFLAGS += --static -nostartfiles -Tstellaris.ld -I$(HOME)/sat/arm-none-eabi/include
+CFLAGS += -c -fno-common -ffunction-sections -fdata-sections 
+LDFLAGS = -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 -L$(HOME)/sat/arm-none-eabi/lib
+LDFLAGS +=-lopencm3_lm4f 
+LDFLAGS	+= --static \
 	-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
 	-T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
-	-mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  \
-        -L$(HOME)/sat/arm-none-eabi/lib
+	-mcpu=cortex-m4 
+
+LDSCRIPT= ../ld/stellaris.ld
 
 OCFLAGS	=	-Obinary
 
@@ -49,7 +41,7 @@ INCLUDE =   -I../\
 # Add other source files if they are needed e.g. other Firmwarlib Components
 SRCS	=   ./src/main.c \
 	    ../common/freertos_opencm3.c \
-	    ../common/usart_opencm3.c \
+	    ../common/usart_stellaris.c \
 		../../FreeRTOSv10.2.0/FreeRTOS/Source/timers.c \
 		../../FreeRTOSv10.2.0/FreeRTOS/Source/portable/MemMang/heap_2.c \
 		../../FreeRTOSv10.2.0/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
@@ -77,12 +69,9 @@ clean:
 	-find . -name '*.map' | xargs rm
 	rm ../common/*.o
 
-
 $(TARGET).list: $(TARGET).elf
 	@echo "  OBJDUMP $(TARGET).list"
 	$(OD) $(ODFLAGS) $< > $(TARGET).lst
-
-
 
 $(TARGET).bin: $(TARGET).elf
 	@echo "  OBJCOPY $(TARGET).bin"
@@ -100,10 +89,5 @@ $(TARGET).elf: $(OBJS)
 	@echo "  CC $<"
 	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
 
-flash: output/main.bin
-	st-flash write output/main.bin 0x8000000
-#	stm32flash.sh -w output/main.bin /dev/ttyUSB0
-
 qemu: output/main.bin
-	qemu-system-arm -M stm32-p103 -serial stdio -serial stdio -serial stdio -kernel output/main.bin
-
+	qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -vga none -net none -serial mon:stdio -kernel output/main.bin
