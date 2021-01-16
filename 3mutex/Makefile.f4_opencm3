@@ -25,7 +25,7 @@ LDFLAGS	= -lopencm3_stm32f4 --static \
 	-Wl,--start-group -Wl,--end-group \
 	-T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
         -MD -mcpu=cortex-m4 -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
-        -L$(HOME)/sat/arm-none-eabi/lib
+        -L$(HOME)/libopencm3/lib
 
 OCFLAGS	=	-Obinary
 
@@ -39,23 +39,23 @@ TARGET  = 	$(OUTPUT_DIR)/main
 
 INCLUDE =   -I../\
 	    -I./src/ \
-	    -I../../FreeRTOSv10.0.0/FreeRTOS/Source/include/ \
-	    -I../../FreeRTOSv10.0.0/FreeRTOS/Source/portable/GCC/ARM_CM4F/ \
+	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/include/ \
+	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/ \
 	    -I../common \
- 	    -I$(HOME)/sat/arm-none-eabi/include/
+ 	    -I$(HOME)/libopencm3/include/
 
 # Add other source files if they are needed e.g. other Firmwarlib Components
 SRCS	=   ./src/main.c \
 	    ../common/freertos_opencm3.c \
 	    ../common/usart_opencm3.c \
 	    ../common/stm32f4_initialisation.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/timers.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/portable/MemMang/heap_2.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/tasks.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/queue.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/croutine.c \
-		../../FreeRTOSv10.0.0/FreeRTOS/Source/list.c 
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/timers.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/MemMang/heap_2.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/port.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/tasks.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/queue.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/croutine.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/list.c 
 
 OBJS=$(SRCS:.c=.o)
 
@@ -68,7 +68,7 @@ all: $(TARGET).bin  $(TARGET).list
 clean:
 	@echo "Removing files..."
 	-find . -name '*.o'   | xargs rm
-	-find ../../FreeRTOSv10.0.0/FreeRTOS/Source -name '*.o'   | xargs rm
+	-find ../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel -name '*.o'   | xargs rm
 	-find . -name '*.elf' | xargs rm
 	-find . -name '*.lst' | xargs rm
 	-find . -name '*.out' | xargs rm

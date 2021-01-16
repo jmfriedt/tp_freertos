@@ -15,8 +15,8 @@ usart_cm3.bin: main_cm3.o usart_cm3.o
 	arm-none-eabi-gcc -o usart_cm3.elf usart_cm3.o main_cm3.o  \
 	    -L$(HOME)/sat/arm-none-eabi/lib \
 	    --static -T../ld/stm32vl-discovery.ld -nostartfiles -Wl,--gc-sections -mthumb \
-            -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd -lopencm3_stm32f1
-	arm-none-eabi-objcopy -O binary usart_cm3.elf usart_cm3.bin	
+            -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd -lopencm3_stm32f1 -lc -lgcc -lnosys
+	arm-none-eabi-objcopy -O binary usart_cm3.elf usart_cm3.bin
 
 pwm_cm3.o: pwm_cm3.c
 	arm-none-eabi-gcc -Wall -I../common -I$(HOME)/sat/arm-none-eabi/include \
@@ -55,3 +55,7 @@ clean:
 
 flash: usart_cm3.bin
 	stm32flash.sh -w usart_cm3.bin /dev/ttyUSB0
+
+qemu: usart_cm3.bin
+	../../../qemu/qemu_stm32/arm-softmmu/qemu-system-arm -M stm32-p103 -serial stdio -serial stdio -serial stdio -kernel usart_cm3.bin
+

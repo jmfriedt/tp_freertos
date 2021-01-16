@@ -17,16 +17,16 @@ CFLAGS	= 	-c -fno-common \
 		-mthumb \
                 -g3 \
 		-DSTM32F1 \
-                -DSTM32F10X_MD
+                -DSTM32F10X_MD \
 #                -DSTM32F10X_LD_VL \
 
-LDSCRIPT= ../ld/stm32vl-discovery.ld
+LDSCRIPT= ../ld/stm32f103.ld
 
 LDFLAGS	= -lopencm3_stm32f1 --static \
 	-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
 	-T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
 	-mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  \
-        -L$(HOME)/sat/arm-none-eabi/lib
+        -L$(HOME)/libopencm3/lib 
 
 OCFLAGS	=	-Obinary
 
@@ -40,23 +40,22 @@ TARGET  = 	$(OUTPUT_DIR)/main
 
 INCLUDE =   -I../\
 	    -I./src/ \
-	    -I../../FreeRTOSv10.2.0/FreeRTOS/Source/include/ \
-	    -I../../FreeRTOSv10.2.0/FreeRTOS/Source/portable/GCC/ARM_CM3/ \
+	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/include/ \
+	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/GCC/ARM_CM3/ \
 	    -I../common \
-            -I$(HOME)/sat/arm-none-eabi/include
-
+            -I$(HOME)/libopencm3/include/
 
 # Add other source files if they are needed e.g. other Firmwarlib Components
 SRCS	=   ./src/main.c \
 	    ../common/freertos_opencm3.c \
 	    ../common/usart_opencm3.c \
-		../../FreeRTOSv10.2.0/FreeRTOS/Source/timers.c \
-		../../FreeRTOSv10.2.0/FreeRTOS/Source/portable/MemMang/heap_2.c \
-		../../FreeRTOSv10.2.0/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
-		../../FreeRTOSv10.2.0/FreeRTOS/Source/tasks.c \
-		../../FreeRTOSv10.2.0/FreeRTOS/Source/queue.c \
-		../../FreeRTOSv10.2.0/FreeRTOS/Source/croutine.c \
-		../../FreeRTOSv10.2.0/FreeRTOS/Source/list.c 
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/timers.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/MemMang/heap_2.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/GCC/ARM_CM3/port.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/tasks.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/queue.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/croutine.c \
+		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/list.c 
 
 OBJS=$(SRCS:.c=.o)
 
@@ -69,7 +68,7 @@ all: $(TARGET).bin  $(TARGET).list
 clean:
 	@echo "Removing files..."
 	-find . -name '*.o'   | xargs rm
-	-find ../../FreeRTOSv10.2.0/FreeRTOS/Source -name '*.o'   | xargs rm
+	-find ../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel -name '*.o'   | xargs rm
 	-find . -name '*.elf' | xargs rm
 	-find . -name '*.lst' | xargs rm
 	-find . -name '*.out' | xargs rm
@@ -101,8 +100,8 @@ $(TARGET).elf: $(OBJS)
 	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
 
 flash: output/main.bin
-	st-flash write output/main.bin 0x8000000
-#	stm32flash.sh -w output/main.bin /dev/ttyUSB0
+	stm32flash.sh -w output/main.bin /dev/ttyUSB0
+#	st-flash write output/main.bin 0x8000000
 
 qemu: output/main.bin
 	qemu-system-arm -M stm32-p103 -serial stdio -serial stdio -serial stdio -kernel output/main.bin
