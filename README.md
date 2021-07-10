@@ -10,5 +10,7 @@ Using libopencm3 to provide system calls required by FreeRTOS running on the STM
 of ST Microelectronics' libstm32) is described at http://www.jiggerjuice.info/electronics/projects/arm/freertos-stm32f103-port.html 
 and was used in this set of demonstrations.
 
-Tested with Andre Beckus' port of qemu to the stm32: compile examples
-for the STM32F103 (MD) device.
+Tested with Andre Beckus' port of qemu to the stm32 (https://github.com/beckus/qemu_stm32): compile examples
+for the STM32F103 (MD) device. Also test with Renode (https://github.com/renode) emulating the STM32F103:
+
+<img src="pictures/renode_uart.png">
