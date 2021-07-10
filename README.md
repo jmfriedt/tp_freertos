@@ -19,4 +19,4 @@ The Renode model has been updated to display GPIO/LED output state. Here also th
 which can be removed by commenting (prefix with ``:``) the ``sysbus LogPeripheralAccess sysbus.gpioPortC`` line
 in 1basic/stm32f103.resc
 
-<img src="pictures/renode_uart.png">
+<img src="pictures/renode_uart_and_port.png">
