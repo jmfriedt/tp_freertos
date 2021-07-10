@@ -2,10 +2,16 @@ using sysbus
 
 mach create
 machine LoadPlatformDescription @platforms/cpus/stm32f103.repl
-machine LoadPlatformDescriptionFromString "button: Miscellaneous.Button @ gpioPortC 13 { IRQ -> gpioPortC@13 }"
+machine LoadPlatformDescription @stm32f1_led.repl
 
 showAnalyzer uart2
 showAnalyzer uart1
+peripherals
+logLevel -1 sysbus.gpioPortC.Led2
+logLevel -1 sysbus.gpioPortC.Led1
+logLevel -1 sysbus.gpioPortC
+logLevel 3
+sysbus LogPeripheralAccess sysbus.gpioPortC
 
 macro reset
 """

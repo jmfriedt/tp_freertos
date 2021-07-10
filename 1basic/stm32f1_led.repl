@@ -1,0 +1,17 @@
+/* see https://renode.readthedocs.io/en/latest/basic/describing_platforms.html
+and
+https://renode.readthedocs.io/en/latest/basic/logger.html
+and
+https://stackoverflow.com/questions/60868797/renode-push-a-button-and-see-a-led-lighting
+*/
+
+Led1: Miscellaneous.LED @ gpioPortC
+
+gpioPortC:
+    1 -> Led1@0
+
+Led2: Miscellaneous.LED @ gpioPortC
+
+gpioPortC:
+    2 -> Led2@0
+
