@@ -14,3 +14,9 @@ Tested with Andre Beckus' port of qemu to the stm32 (https://github.com/beckus/q
 for the STM32F103 (MD) device. Also test with Renode (https://github.com/renode) emulating the STM32F103:
 
 <img src="pictures/renode_uart.png">
+
+The Renode model has been updated to display GPIO/LED output state. Here also the very verbose gpioPortC status is displayed,
+which can be removed by commenting (prefix with ``:``) the ``sysbus LogPeripheralAccess sysbus.gpioPortC`` line
+in 1basic/stm32f103.resc
+
+<img src="pictures/renode_uart.png">
