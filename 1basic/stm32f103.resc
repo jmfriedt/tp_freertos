@@ -1,0 +1,15 @@
+using sysbus
+
+mach create
+machine LoadPlatformDescription @platforms/cpus/stm32f103.repl
+machine LoadPlatformDescriptionFromString "button: Miscellaneous.Button @ gpioPortC 13 { IRQ -> gpioPortC@13 }"
+
+showAnalyzer uart2
+showAnalyzer uart1
+
+macro reset
+"""
+    sysbus LoadELF @output/main.elf
+"""
+
+runMacro $reset

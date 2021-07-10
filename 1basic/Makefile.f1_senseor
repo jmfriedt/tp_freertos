@@ -44,7 +44,7 @@ INCLUDE =   -I../\
 	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/include/ \
 	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/GCC/ARM_CM3/ \
 	    -I../common \
-            -I$(HOME)/libopencm3
+            -I$(HOME)/libopencm3 -I$(HOME)/libopencm3/include
 
 
 # Add other source files if they are needed e.g. other Firmwarlib Components
@@ -108,3 +108,5 @@ flash: output/main.bin
 qemu: output/main.bin
 	qemu-system-arm -M stm32-p103 -serial stdio -serial stdio -serial stdio -kernel output/main.bin
 
+renode: output/main.elf
+	renode -e "s @stm32f103.resc"
