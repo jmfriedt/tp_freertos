@@ -15,9 +15,11 @@ const struct rcc_clock_scale rcc_hse_20mhz_3v3 = {
                 .plln = 280,                          // 1*280/2=140 MHz
                 .pllp = 2,                            //       ^
                 .pllq = 6,
-                .hpre = RCC_CFGR_HPRE_DIV_NONE,
-                .ppre1 = RCC_CFGR_PPRE_DIV_4,
-                .ppre2 = RCC_CFGR_PPRE_DIV_2,
+                .pllr = 0,                            // 210822
+                .hpre = RCC_CFGR_HPRE_NODIV,
+                .ppre1 = RCC_CFGR_PPRE_DIV4,
+                .ppre2 = RCC_CFGR_PPRE_DIV2,
+                .voltage_scale = PWR_SCALE1,          // 210822
                 .pll_source = RCC_CFGR_PLLSRC_HSE_CLK, // 190913 mandatory to use external clock (!=HSI)
                 .flash_config = FLASH_ACR_ICEN | FLASH_ACR_DCEN |
                                 FLASH_ACR_LATENCY_4WS, // 4 WS d'apres configuration par ST
@@ -48,5 +50,6 @@ const struct rcc_clock_scale rcc_hse_20mhz_3v3 = {
 */
 
 void core_clock_setup(void)
-{rcc_clock_setup_hse_3v3(&rcc_hse_20mhz_3v3); // custom version
+{// rcc_clock_setup_hse_3v3(&rcc_hse_20mhz_3v3); // custom version
+ rcc_clock_setup_pll(&rcc_hse_20mhz_3v3);
 }
