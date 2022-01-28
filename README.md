@@ -11,7 +11,7 @@ of ST Microelectronics' libstm32) is described at http://www.jiggerjuice.info/el
 and was used in this set of demonstrations.
 
 Tested with Andre Beckus' port of qemu to the stm32 (https://github.com/beckus/qemu_stm32): compile examples
-for the STM32F103 (MD) device. Also test with Renode (https://github.com/renode) emulating the STM32F103:
+for the STM32F103 (MD) device. Also tested with Renode (https://github.com/renode) emulating the STM32F103:
 
 <img src="pictures/renode_uart.png">
 

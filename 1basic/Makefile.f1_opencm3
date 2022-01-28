@@ -1,4 +1,5 @@
-PATH := /home/jmfriedt/enseignement/ufr/platforms/stm32/qemu/qemu_stm32/arm-softmmu/:$(PATH)
+PATH := /home/jmfriedt/enseignement/sqnx/platforms/stm32/qemu/qemu_stm32/arm-softmmu/:$(PATH)
+FREERTOS_PATH=../../FreeRTOSv202112.00/FreeRTOS/Source
 
 CROSS_COMPILE =arm-none-eabi-
 CC		= $(CROSS_COMPILE)gcc
@@ -26,7 +27,7 @@ LDFLAGS	= -lopencm3_stm32f1 --static \
 	-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
 	-T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
 	-mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  \
-        -L$(HOME)/libopencm3/lib 
+        -L$(HOME)/libopencm3/lib
 
 OCFLAGS	=	-Obinary
 
@@ -40,22 +41,23 @@ TARGET  = 	$(OUTPUT_DIR)/main
 
 INCLUDE =   -I../\
 	    -I./src/ \
-	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/include/ \
-	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/GCC/ARM_CM3/ \
+	    -I$(FREERTOS_PATH)/include \
+	    -I$(FREERTOS_PATH)/portable/GCC/ARM_CM3/ \
 	    -I../common \
-            -I$(HOME)/libopencm3/include/
+            -I$(HOME)/libopencm3 -I$(HOME)/libopencm3/include
+
 
 # Add other source files if they are needed e.g. other Firmwarlib Components
 SRCS	=   ./src/main.c \
 	    ../common/freertos_opencm3.c \
 	    ../common/usart_opencm3.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/timers.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/MemMang/heap_2.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/GCC/ARM_CM3/port.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/tasks.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/queue.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/croutine.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/list.c 
+		$(FREERTOS_PATH)/timers.c \
+		$(FREERTOS_PATH)/portable/MemMang/heap_2.c \
+		$(FREERTOS_PATH)/portable/GCC/ARM_CM3/port.c \
+		$(FREERTOS_PATH)/tasks.c \
+		$(FREERTOS_PATH)/queue.c \
+		$(FREERTOS_PATH)/croutine.c \
+		$(FREERTOS_PATH)/list.c 
 
 OBJS=$(SRCS:.c=.o)
 
