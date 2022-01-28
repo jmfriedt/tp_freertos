@@ -25,7 +25,8 @@ void clock_setup(void)
 #ifdef STM32F10X_LD_VL
  rcc_clock_setup_in_hse_8mhz_out_24mhz();  // STM32F100 discovery
 #else
- rcc_clock_setup_in_hse_8mhz_out_72mhz();  // STM32F103
+ // rcc_clock_setup_in_hse_8mhz_out_72mhz();  // STM32F103
+ rcc_clock_setup_pll(&rcc_hse_configs[RCC_CLOCK_HSE8_72MHZ]);
 #endif
 #else  // F4
  // rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]); 
