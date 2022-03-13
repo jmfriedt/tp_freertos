@@ -1,0 +1,131 @@
+FREERTOS_LOCATION=../../FreeRTOSv202112.00
+LIBOPENCM3_LOCATION=$(HOME)/libopencm3
+
+CROSS_COMPILE =arm-none-eabi-
+CC		= $(CROSS_COMPILE)gcc
+LD		= $(CROSS_COMPILE)ld
+AR		= $(CROSS_COMPILE)ar
+AS		= $(CROSS_COMPILE)as
+OC		= $(CROSS_COMPILE)objcopy
+OD		= $(CROSS_COMPILE)objdump
+SZ		= $(CROSS_COMPILE)size
+
+CFLAGS =  -Wall -Os
+CFLAGS += -mthumb -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mcpu=cortex-m4 -DLM4F -DARM_MATH_CM4 -D__FPU_PRESENT=1
+CFLAGS += --static -nostartfiles -Tstellaris.ld -I$(HOME)/sat/arm-none-eabi/include -I../CMSIS_5/CMSIS/DSP/Include/ -I../CMSIS_5/CMSIS/Core/Include/
+CFLAGS += -c -fno-common -ffunction-sections -fdata-sections 
+LDFLAGS = -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 -L$(LIBOPENCM3_LOCATION)/lib 
+LDFLAGS +=-lopencm3_lm4f -lm
+
+LDFLAGS	+= --static \
+	-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
+	-T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
+	-mcpu=cortex-m4 
+
+LDSCRIPT= ../ld/stellaris.ld
+
+OCFLAGS	=	-Obinary
+
+ODFLAGS	=	-S
+
+
+OUTPUT_DIR = output
+
+TARGET  = 	$(OUTPUT_DIR)/main
+
+
+INCLUDE =   -I../\
+	    -I./src/ \
+	    -I$(FREERTOS_LOCATION)/FreeRTOS/Source/include/ \
+	    -I$(FREERTOS_LOCATION)/FreeRTOS/Source/portable/GCC/ARM_CM3/ \
+	    -I../common \
+            -I$(LIBOPENCM3_LOCATION)/include \
+	    -I../CMSIS_5/CMSIS/DSP/Include/ \
+	    -I../CMSIS_5/CMSIS/Core/Include/
+
+
+# Add other source files if they are needed e.g. other Firmwarlib Components
+SRCS	=   ./src/main.c \
+	    ../common/freertos_opencm3.c \
+	    ../common/usart_stellaris.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/CommonTables/arm_const_structs.c \
+../CMSIS_5/CMSIS/DSP/Source/CommonTables/arm_common_tables.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_bitreversal.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix2_f32.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix2_init_f32.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix2_init_q15.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix2_init_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix2_q15.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix2_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix4_f32.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix4_init_f32.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix4_init_q15.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix4_init_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix4_q15.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix4_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix8_f32.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_dct4_f32.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_dct4_init_f32.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_dct4_init_q15.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_dct4_init_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_dct4_q15.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_dct4_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_rfft_f32.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_rfft_fast_f32.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_rfft_fast_init_f32.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_rfft_init_f32.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_rfft_init_q15.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_rfft_init_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_rfft_q15.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_rfft_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_bitreversal2.S \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/timers.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/portable/MemMang/heap_2.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/tasks.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/queue.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/croutine.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/list.c 
+
+OBJS=$(SRCS:.c=.o)
+
+.PHONY : clean all
+
+all: $(TARGET).bin  $(TARGET).list
+	@echo "  SIZE $(TARGET).elf"
+	$(SZ) $(TARGET).elf
+
+clean:
+	@echo "Removing files..."
+	-find . -name '*.o'   | xargs rm
+	-find $(FREERTOS_LOCATION)/FreeRTOS/Source -name '*.o'   | xargs rm
+	-find . -name '*.elf' | xargs rm
+	-find . -name '*.lst' | xargs rm
+	-find . -name '*.out' | xargs rm
+	-find . -name '*.bin' | xargs rm
+	-find . -name '*.map' | xargs rm
+	rm ../common/*.o
+
+$(TARGET).list: $(TARGET).elf
+	@echo "  OBJDUMP $(TARGET).list"
+	$(OD) $(ODFLAGS) $< > $(TARGET).lst
+
+$(TARGET).bin: $(TARGET).elf
+	@echo "  OBJCOPY $(TARGET).bin"
+	$(OC) $(OCFLAGS) $(TARGET).elf $(TARGET).bin
+
+$(TARGET).elf: $(OBJS) 
+	@echo "  LD $(TARGET).elf"
+	$(CC)  -o $(TARGET).elf $(OBJS) $(LDFLAGS)
+
+%.o: %.c
+	@echo "  CC $<"
+	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
+
+%.o: %.S
+	@echo "  CC $<"
+	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
+
+qemu: output/main.bin
+	qemu-system-arm -cpu cortex-m4 -machine lm3s6965evb -nographic -vga none -net none -serial mon:stdio -kernel output/main.bin
