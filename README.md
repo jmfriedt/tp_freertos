@@ -2,7 +2,7 @@
 TP FreeRTOS on STM32F1VLDiscovery board or STM32F103 (update the LD script accordingly)
 
 Assumes the Long Term Supported version of FreeRTOS as available at https://github.com/FreeRTOS/FreeRTOS-LTS 
-(remember to ``git clone --recursive``) is located at the same level than this set of examples: tune the Makefiles
+(remember to ``git clone --recursive``), or the version found at https://www.freertos.org/a00104.html, is located at the same level than this set of examples: tune the Makefiles
 accordingly for the header files and libraries to reach this directory. Former versions of FreeRTOSv9.0.0 or 
 FreeRTOSv10.0.0 can be used as well: in that case tune the parameters of Makefile.v9 accordingly).
 
