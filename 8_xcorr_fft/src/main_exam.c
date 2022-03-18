@@ -12,79 +12,36 @@
 
 #include "data.h"
 
-#define N 256
-// #define N 32
+#define N 32
+// #define N 256
 
 xQueueHandle qh1=0,qh2=0;
-xSemaphoreHandle xMutex;
-
-void xcorr(int32_t *x,int32_t *y,int n)
-{int ki,ko;
- int32_t *xc;
- int64_t sum;
- xc=(int32_t*)malloc(n*sizeof(int32_t));
- for (ko=0;ko<n;ko++)
-   {sum=0;
-    for (ki=0;ki<n;ki++)
-      {sum+=(int64_t)x[ki]*(int64_t)y[(ki+ko)%n];}
-    xc[ko]=(sum>>31);
-   }
- for (ko=0;ko<n;ko++) x[ko]=xc[ko];
-}
-
-void dec(int i,char *c)
-{int32_t v,d=1000000000;
- int k=1;
- if (i<0) {c[0]='-';i=-i;} else c[0]='+';
- while (d>=1)
-   {v=(i/d);
-    c[k]=(char)v+'0';
-    i=i-v*d;
-    d/=10;
-    k++;
-  }
- c[k]=0;
-}
 
 void hex(int i,char *c)
 {int j;
+ c[0]='0';c[1]='x';
  for (j=0;j<8;j++)
-    {c[7-j]=(i>>(j*4))&0x0f;
-     if (c[7-j]<10) c[7-j]+='0'; else c[7-j]+=('A'-10);
+    {c[7-j+2]=(i>>(j*4))&0x0f;
+     if (c[7-j+2]<10) c[7-j+2]+='0'; else c[7-j+2]+=('A'-10);
     }
- c[8]=0;
+ c[10]=0;
 }
 
 void cpl(int r,int i,char *c)
-{dec(r,c);
- c[11]=' ';
- dec(i,&c[12]);
-}
-
-void do_display_r(int32_t *i, int n)
-{int k;
- char c[25];
- xSemaphoreTake( xMutex, portMAX_DELAY );
- for (k=0;k<n;k++)
-   {dec(i[k],c); // {hex(i[k],&c[2]);
-    uart_puts(c);
-    uart_puts("\n\0");
-   }
- xSemaphoreGive( xMutex );
+{hex(r,c);
+ c[10]=' ';
+ hex(i,&c[11]);
 }
 
 void do_display(int32_t *i, int n)
 {int k;
- // char c[13]="0x";
  char c[25];
  uart_puts("disp=\0");hex(i[2*N],c); uart_puts(c);uart_puts("\n\0");
- xSemaphoreTake( xMutex, portMAX_DELAY );
  for (k=0;k<n;k+=2)
-   {cpl(i[k],i[k+1],c); // {hex(i[k],&c[2]);
+   {cpl(i[k],i[k+1],c);
     uart_puts(c);
     uart_puts("\n\0");
    }
- xSemaphoreGive( xMutex );
 }
 
 void do_mul(void* param)
@@ -119,9 +76,7 @@ void do_mul(void* param)
    case 3:meas=in3;break;
    default: uart_puts("error\n\0");
   }
- do_display(c1,  2*N);
- do_display(c2,  2*N);
- do_display(meas,2*N);
+ 
  for (k=0;k<2*N;k+=2) 
    {tmp1=(int64_t)c1[k]*(int64_t)meas[k]+(int64_t)c1[k+1]*(int64_t)meas[k+1];  // x.*conj(c1)
     tmp2=-(int64_t)c1[k+1]*(int64_t)meas[k]+(int64_t)c1[k]*(int64_t)meas[k+1]; // x.*conj(c1)
@@ -158,8 +113,8 @@ void do_ifft(void* p)
     // uart_puts("0x\0");hex(mod,c);
 //    dec(mod,c);uart_puts(c);uart_puts("\n\0");
    }
- uart_puts("max=\0");dec(max,c); uart_puts(c);
- uart_puts(" @ \0");dec(maxindex,c); uart_puts(c);uart_puts("\n\0");
+ uart_puts("max=\0");hex(max,c); uart_puts(c);
+ uart_puts(" @ \0");hex(maxindex,c); uart_puts(c);uart_puts("\n\0");
  do_display(in, 2*N);
  
  max=0;
@@ -176,8 +131,8 @@ void do_ifft(void* p)
     // uart_puts("0x\0");hex(mod,c);
 //    dec(mod,c);uart_puts(c);uart_puts("\n\0");
    }
- uart_puts("max=\0");dec(max,c); uart_puts(c);
- uart_puts(" @ \0");dec(maxindex,c); uart_puts(c);uart_puts("\n\0");
+ uart_puts("max=\0");hex(max,c); uart_puts(c);
+ uart_puts(" @ \0");hex(maxindex,c); uart_puts(c);uart_puts("\n\0");
  do_display(in, 2*N);
  while(1) {vTaskDelay(301/portTICK_RATE_MS);}
 }
@@ -211,26 +166,13 @@ void do_fft(void* param)
  if (in[2*N]>0)
     if(xQueueSend(qh1, &in, portMAX_DELAY)!= pdPASS) uart_puts("echec tx\n\0");
  uart_puts("fft");hex(in[2*N],c); uart_puts(c);uart_puts("\n\0");
-// do_display(in, 2*N);
+ do_display(in, 2*N);
  while(1) {vTaskDelay(301/portTICK_RATE_MS);}
 }   
 
-//#define configUSE_TRACE_FACILITY        1
-//#define configUSE_STATS_FORMATTING_FUNCTIONS    1
-void do_ps(void* dummy)
-{char c[50*6];
- portTickType last_wakeup_time;
- last_wakeup_time = xTaskGetTickCount();
- while(1){
-          vTaskDelayUntil(&last_wakeup_time, 500/portTICK_RATE_MS);
-          vTaskList(c);
-          uart_puts(c);
-        }
-}
-
 int main()
-{// static uint32_t c1[2*N],c2[2*N],meas[2*N]; // N*4*2 bytes fait planter FFT
- static int32_t *c0,*c1,*c2,*meas; // N*4*2 bytes fait marcher FFT
+{// static uint32_t c0[2*N],c1[2*N],c2[2*N],meas[2*N]; // N*4*2 bytes FFT crash
+ static int32_t *c0,*c1,*c2,*meas; //  FFT functional
  int k;
  Usart1_Init(); // inits clock as well
 
@@ -241,28 +183,12 @@ int main()
 
  qh1=xQueueCreate(1, sizeof(int32_t*)); if (qh1==0) uart_puts("echec queue1\n\0");
  qh2=xQueueCreate(1, sizeof(int32_t*)); if (qh2==0) uart_puts("echec queue2\n\0");
- xMutex = xSemaphoreCreateMutex();
-
-// time domain demonstration
-#if 0
- for (k=0;k<N;k++) {c1[k]=(pattern1[k]<<28); 
-                    c2[k]=(pattern2[k]<<28);
-                    meas[k]=(measurement[k]<<19);
-                   }
-
- xcorr(c1,meas,N);
- do_display_r(c1, N);
- xcorr(c2,meas,N);
- do_display_r(c2, N);
-while (1) {}
-#endif
-//
 
  for (k=0;k<N;k++) {c1[2*k]=(pattern1[k]<<28); c1[2*k+1]=0;
                     c2[2*k]=(pattern2[k]<<28); c2[2*k+1]=0;
                     meas[2*k]=(measurement[k]<<19); meas[2*k+1]=0;
 #if N==32
-                    c0[2*k]=(sinus1[k]); c0[2*k+1]=0;
+                    c0[2*k]=(sinus1[k]); c0[2*k+1]=0;  // sine wave to check FFT validity
 #endif
                    }
 c0[2*N]=0;
@@ -270,17 +196,6 @@ c1[2*N]=1;
 c2[2*N]=2;
 meas[2*N]=3;
 
-/// test 
-/*
- for (k=0;k<N;k+=2) {c1[2*k]=(1<<12);    c1[2*k+1]=0.;
-                     c1[2*k+2]=-(1<<12); c1[2*k+3]=0.;
-		     c2[2*k]=(1<<12);    c2[2*k+1]=0.;
-                     c2[2*k+2]=-(1<<12); c2[2*k+3]=0.;
-                     meas[2*k]=(1<<12); meas[2*k+1]=0.;
-                     meas[2*k+2]=-(1<<12); meas[2*k+3]=0.;
-                   }
-*/
-/// test 
 #define S 4096
 
 // if (!(pdPASS == xTaskCreate( do_fft, (const char*) "fft_test", STACK_BYTES(20*N), c0,  1,NULL ))) goto hell;
@@ -289,7 +204,6 @@ meas[2*N]=3;
  if (!(pdPASS == xTaskCreate( do_fft, (const char*) "fftm", STACK_BYTES(S), meas,2,NULL ))) {uart_puts("3\0");goto hell;}
  if (!(pdPASS == xTaskCreate( do_mul, (const char*) "mul",  STACK_BYTES(S), NULL,1,NULL ))) {uart_puts("4\0");goto hell;}
  if (!(pdPASS == xTaskCreate( do_ifft,(const char*) "ifft", STACK_BYTES(S), NULL,1,NULL ))) {uart_puts("5\0");goto hell;}
- if (!(pdPASS == xTaskCreate( do_ps,  (const char*) "ps",   STACK_BYTES(S), NULL,1,NULL ))) {uart_puts("6\0");goto hell;}
  vTaskStartScheduler();
  hell:              // should never be reached
    uart_puts("Hell\n\0");
