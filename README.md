@@ -14,6 +14,8 @@ or with a STM32F407 (STM32F4Discovery)
 * in case -DSTM32F10X_MD is selected, then add -Dsenseor for running on the hardware board (SENSeOR reader
 fitted with the XE1203F radiomodem) without resetting the FTDI (keeping the GPIO connected to the FT232
 reset pin as input). For running on Qemu, do not enable -Dsenseor.
+* the Texas Instruments Stellaris Cortex M4F core is supported and allows for simulating the execution
+on the official qemu-system-arm emulator release: in that case, the linker script is stellaris.ld found in the ``ld`` directory.
 
 Using libopencm3 to provide system calls required by FreeRTOS running on the STM32 microcontroller (instead
 of ST Microelectronics' libstm32) is described at http://www.jiggerjuice.info/electronics/projects/arm/freertos-stm32f103-port.html 
