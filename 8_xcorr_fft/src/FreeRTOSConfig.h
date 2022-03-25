@@ -76,7 +76,7 @@
 // #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 ) // JMF compatible v9
 #define configMAX_PRIORITIES		( 5 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 64 )
-#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 49000 ) )
+#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 20000 ) )
 #define configMAX_TASK_NAME_LEN		( 16 )
 
 #define configUSE_16_BIT_TICKS		0
@@ -98,6 +98,8 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend			1
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
+#define INCLUDE_xTaskGetSchedulerState  1
+
 
 /* This is the raw value as per the Cortex-M3 NVIC.  Values can be 255
 (lowest) to 0 (1?) (highest). */
@@ -114,6 +116,11 @@ NVIC value of 255. */
 #define configUSE_TRACE_FACILITY        1
 #define configUSE_STATS_FORMATTING_FUNCTIONS    1
 
+#define configCHECK_FOR_STACK_OVERFLOW 2
+
+// #define configUSE_NEWLIB_REENTRANT 1
+
+/* Define configASSERT() to disable interrupts and sit in a loop. */
+#define configASSERT(x)     if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+
 #endif /* FREERTOS_CONFIG_H */
-
-
