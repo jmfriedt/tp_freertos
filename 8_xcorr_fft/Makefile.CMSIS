@@ -1,0 +1,122 @@
+PATH := /home/jmfriedt/enseignement/sqnx/platforms/stm32/qemu/qemu_stm32/arm-softmmu/:$(PATH)
+FREERTOS_LOCATION=../../FreeRTOSv202112.00
+LIBOPENCM3_LOCATION=$(HOME)/libopencm3
+
+CROSS_COMPILE =arm-none-eabi-
+CC		= $(CROSS_COMPILE)gcc
+LD		= $(CROSS_COMPILE)ld
+AR		= $(CROSS_COMPILE)ar
+AS		= $(CROSS_COMPILE)as
+OC		= $(CROSS_COMPILE)objcopy
+OD		= $(CROSS_COMPILE)objdump
+SZ		= $(CROSS_COMPILE)size
+
+CFLAGS  =       -c -fno-common \
+                -ffunction-sections \
+                -fdata-sections \
+                -Os \
+                -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  \
+                -mthumb \
+                -g3 \
+                -DSTM32F1 \
+                -DSTM32F10X_MD \
+                -I../CMSIS_5/CMSIS/DSP/Include/ -I../CMSIS_5/CMSIS/Core/Include/
+
+#                -Dsenseor
+#                -DSTM32F10X_LD_VL \
+
+LDSCRIPT= ../ld/stm32f103.ld
+
+LDFLAGS = -lopencm3_stm32f1 -lm --static \
+        -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
+        -T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
+        -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd \
+        -L$(HOME)/libopencm3/lib
+
+OCFLAGS	=	-Obinary
+
+ODFLAGS	=	-S
+
+
+OUTPUT_DIR = output
+
+TARGET  = 	$(OUTPUT_DIR)/main
+
+
+INCLUDE =   -I../\
+	    -I./src/ \
+	    -I$(FREERTOS_LOCATION)/FreeRTOS/Source/include/ \
+	    -I$(FREERTOS_LOCATION)/FreeRTOS/Source/portable/GCC/ARM_CM3/ \
+	    -I../common \
+            -I$(LIBOPENCM3_LOCATION)/include \
+	    -I../CMSIS_5/CMSIS/DSP/Include/ \
+	    -I../CMSIS_5/CMSIS/Core/Include/
+
+
+# Add other source files if they are needed e.g. other Firmwarlib Components
+SRCS	=   ./src/main.c \
+	    ../common/freertos_opencm3.c \
+	    ../common/usart_opencm3.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/CommonTables/arm_const_structs.c \
+../CMSIS_5/CMSIS/DSP/Source/CommonTables/arm_common_tables.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_bitreversal.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix2_init_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix2_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix4_init_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix4_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_dct4_init_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_dct4_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_rfft_init_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_rfft_q31.c \
+../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/arm_bitreversal2.S \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/timers.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/portable/MemMang/heap_2.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/tasks.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/queue.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/croutine.c \
+		$(FREERTOS_LOCATION)/FreeRTOS/Source/list.c 
+
+OBJS=$(SRCS:.c=.o)
+
+.PHONY : clean all
+
+all: $(TARGET).bin  $(TARGET).list
+	@echo "  SIZE $(TARGET).elf"
+	$(SZ) $(TARGET).elf
+
+clean:
+	@echo "Removing files..."
+	-find . -name '*.o'   | xargs rm
+	-find $(FREERTOS_LOCATION)/FreeRTOS/Source -name '*.o'   | xargs rm
+	-find . -name '*.elf' | xargs rm
+	-find . -name '*.lst' | xargs rm
+	-find . -name '*.out' | xargs rm
+	-find . -name '*.bin' | xargs rm
+	-find . -name '*.map' | xargs rm
+	rm ../common/*.o ../CMSIS_5/CMSIS/DSP/Source/TransformFunctions/*.o ../CMSIS_5/CMSIS/DSP/Source/CommonTables/*.o
+
+$(TARGET).list: $(TARGET).elf
+	@echo "  OBJDUMP $(TARGET).list"
+	$(OD) $(ODFLAGS) $< > $(TARGET).lst
+
+$(TARGET).bin: $(TARGET).elf
+	@echo "  OBJCOPY $(TARGET).bin"
+	$(OC) $(OCFLAGS) $(TARGET).elf $(TARGET).bin
+
+$(TARGET).elf: $(OBJS) 
+	@echo "  LD $(TARGET).elf"
+	$(CC)  -o $(TARGET).elf $(OBJS) $(LDFLAGS)
+
+%.o: %.c
+	@echo "  CC $<"
+	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
+
+%.o: %.S
+	@echo "  CC $<"
+	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
+
+qemu: output/main.bin
+	qemu-system-arm -M stm32-p103 -serial stdio -serial stdio -serial stdio -kernel output/main.bin
+

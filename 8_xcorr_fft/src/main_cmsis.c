@@ -7,6 +7,8 @@
 #include <stdlib.h> // malloc
 #include <stdio.h>  // sprintf
 
+#undef with_malloc  // static v.s dyanmic allocation
+
 #include "arm_math.h"
 #include "arm_const_structs.h"
 
@@ -17,6 +19,12 @@
 
 xQueueHandle qh1=0,qh2=0;
 xSemaphoreHandle xMutex;
+
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pTaskName)
+{uart_puts("\r\nStack: ");
+ uart_puts(pTaskName);
+ while(1) vTaskDelay(301/portTICK_RATE_MS);
+}
 
 void xcorr(int32_t *x,int32_t *y,int n)
 {int ki,ko;
@@ -119,9 +127,9 @@ void do_mul(void* param)
    case 3:meas=in3;break;
    default: uart_puts("error\n\0");
   }
- do_display(c1,  2*N);
- do_display(c2,  2*N);
- do_display(meas,2*N);
+// do_display(c1,  2*N);
+// do_display(c2,  2*N);
+// do_display(meas,2*N);
  for (k=0;k<2*N;k+=2) 
    {tmp1=(int64_t)c1[k]*(int64_t)meas[k]+(int64_t)c1[k+1]*(int64_t)meas[k+1];  // x.*conj(c1)
     tmp2=-(int64_t)c1[k+1]*(int64_t)meas[k]+(int64_t)c1[k]*(int64_t)meas[k+1]; // x.*conj(c1)
@@ -133,8 +141,8 @@ void do_mul(void* param)
     c2[k]=(tmp1>>31);
     c2[k+1]=(tmp2>>31);
    }
- do_display(c1, 2*N);
- do_display(c2, 2*N); // must be BEFORE queue that triggers iFFT !
+// do_display(c1, 2*N);
+// do_display(c2, 2*N); // must be BEFORE queue that triggers iFFT !
 
  if(!xQueueSend(qh2, &c1, 100)) uart_puts("echec c1\n\0");
  if(!xQueueSend(qh2, &c2, 100)) uart_puts("echec c2\n\0");
@@ -218,26 +226,33 @@ void do_fft(void* param)
 //#define configUSE_TRACE_FACILITY        1
 //#define configUSE_STATS_FORMATTING_FUNCTIONS    1
 void do_ps(void* dummy)
-{char c[50*6];
+{char c[50*8];
  portTickType last_wakeup_time;
  last_wakeup_time = xTaskGetTickCount();
  while(1){
           vTaskDelayUntil(&last_wakeup_time, 500/portTICK_RATE_MS);
+          xSemaphoreTake( xMutex, portMAX_DELAY );
           vTaskList(c);
           uart_puts(c);
+          xSemaphoreGive( xMutex );
         }
 }
 
 int main()
-{// static uint32_t c1[2*N],c2[2*N],meas[2*N]; // N*4*2 bytes fait planter FFT
+{int k;
+#ifndef with_maloc
+ static uint32_t c0[2*N+1],c1[2*N+1],c2[2*N+1],meas[2*N+1]; // N*4*2 bytes fait planter FFT
+#else
  static int32_t *c0,*c1,*c2,*meas; // N*4*2 bytes fait marcher FFT
- int k;
+#endif
  Usart1_Init(); // inits clock as well
 
+#ifndef with_maloc
  c0=(int32_t*)malloc((2*N+1)*sizeof(int32_t));
  c1=(int32_t*)malloc((2*N+1)*sizeof(int32_t));
  c2=(int32_t*)malloc((2*N+1)*sizeof(int32_t));
  meas=(int32_t*)malloc((2*N+1)*sizeof(int32_t));
+#endif
 
  qh1=xQueueCreate(1, sizeof(int32_t*)); if (qh1==0) uart_puts("echec queue1\n\0");
  qh2=xQueueCreate(1, sizeof(int32_t*)); if (qh2==0) uart_puts("echec queue2\n\0");
@@ -256,7 +271,6 @@ int main()
  do_display_r(c2, N);
 while (1) {}
 #endif
-//
 
  for (k=0;k<N;k++) {c1[2*k]=(pattern1[k]<<28); c1[2*k+1]=0;
                     c2[2*k]=(pattern2[k]<<28); c2[2*k+1]=0;
@@ -265,10 +279,10 @@ while (1) {}
                     c0[2*k]=(sinus1[k]); c0[2*k+1]=0;
 #endif
                    }
-c0[2*N]=0;
-c1[2*N]=1;
-c2[2*N]=2;
-meas[2*N]=3;
+  c0[2*N]=0;
+  c1[2*N]=1;
+  c2[2*N]=2;
+  meas[2*N]=3;
 
 /// test 
 /*
@@ -281,15 +295,15 @@ meas[2*N]=3;
                    }
 */
 /// test 
-#define S 4096
+#define S 6000
 
 // if (!(pdPASS == xTaskCreate( do_fft, (const char*) "fft_test", STACK_BYTES(20*N), c0,  1,NULL ))) goto hell;
  if (!(pdPASS == xTaskCreate( do_fft, (const char*) "fft1", STACK_BYTES(S), c1,  1,NULL ))) {uart_puts("1\0");goto hell;}
  if (!(pdPASS == xTaskCreate( do_fft, (const char*) "fft2", STACK_BYTES(S), c2,  3,NULL ))) {uart_puts("2\0");goto hell;}
  if (!(pdPASS == xTaskCreate( do_fft, (const char*) "fftm", STACK_BYTES(S), meas,2,NULL ))) {uart_puts("3\0");goto hell;}
- if (!(pdPASS == xTaskCreate( do_mul, (const char*) "mul",  STACK_BYTES(S), NULL,1,NULL ))) {uart_puts("4\0");goto hell;}
+ if (!(pdPASS == xTaskCreate( do_mul, (const char*) "mul",  STACK_BYTES(500), NULL,1,NULL ))) {uart_puts("4\0");goto hell;}
  if (!(pdPASS == xTaskCreate( do_ifft,(const char*) "ifft", STACK_BYTES(S), NULL,1,NULL ))) {uart_puts("5\0");goto hell;}
- if (!(pdPASS == xTaskCreate( do_ps,  (const char*) "ps",   STACK_BYTES(S), NULL,1,NULL ))) {uart_puts("6\0");goto hell;}
+ if (!(pdPASS == xTaskCreate( do_ps,  (const char*) "ps",   STACK_BYTES(1500), NULL,1,NULL ))) {uart_puts("6\0");goto hell;}
  vTaskStartScheduler();
  hell:              // should never be reached
    uart_puts("Hell\n\0");
