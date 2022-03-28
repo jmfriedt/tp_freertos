@@ -1,1 +1,1 @@
-Makefile.stellaris
+Makefile.CMSIS
