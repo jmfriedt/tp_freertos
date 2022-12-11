@@ -31,3 +31,6 @@ which can be removed by commenting (prefix with ``:``) the ``sysbus LogPeriphera
 in 1basic/stm32f103.resc
 
 <img src="pictures/renode_uart_and_port.png">
+
+This set of laboratory sessions was devoped independently but happens to closely match the topics of [Beginning STM32: Developing with FreeRTOS, libopencm3 and GCC](https://www.amazon.fr/Beginning-STM32-Developing-FreeRTOS-libopencm3/dp/1484236238) which might provide additional references to my own supporting material found at (http://jmfriedt.free.fr) under the Master1 section/embedded electronics/2nd semester. The
+(github)[https://github.com/ve3wwg/stm32f103c8t6] might provide complementary resources.
