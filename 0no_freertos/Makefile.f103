@@ -1,33 +1,27 @@
 all: usart_cm3.bin pwm_cm3.bin # usart_stm32.bin
 
+LIBOPENCM3=$(HOME)/libopencm3/
+CFLAGS=-Wall -I../common -fno-common -mthumb -mcpu=cortex-m3 -I$(LIBOPENCM3)/include \
+       -msoft-float -MD -DSTM32F1 -DSTM32F10X_MD -Dsenseor
+LDFLAGS= -L$(LIBOPENCM3)/lib --static -T../ld/stm32vl-discovery.ld -nostartfiles -Wl,--gc-sections -mthumb \
+            -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  -lgcc -lc -lopencm3_stm32f1 -lnosys
+
 #libopencm3 examples
 main_cm3.o: main_cm3.c
-	arm-none-eabi-gcc -Wall -I../common -fno-common -mthumb -mcpu=cortex-m3 \
-	    -I$(HOME)/sat/arm-none-eabi/include \
-           -msoft-float -MD -DSTM32F1 -DSTM32F10X_MD -c main_cm3.c
+	arm-none-eabi-gcc $(CFLAGS) -c main_cm3.c
 
 usart_cm3.o: ../common/usart_opencm3.c
-	arm-none-eabi-gcc -Wall -I../common -fno-common -mthumb -mcpu=cortex-m3 \
-	    -I$(HOME)/sat/arm-none-eabi/include \
-           -msoft-float -MD -DSTM32F1 -DSTM32F10X_MD -o usart_cm3.o -c ../common/usart_opencm3.c
+	arm-none-eabi-gcc $(CFLAGS) -o usart_cm3.o -c ../common/usart_opencm3.c
 
 usart_cm3.bin: main_cm3.o usart_cm3.o
-	arm-none-eabi-gcc -o usart_cm3.elf usart_cm3.o main_cm3.o  \
-	    -L$(HOME)/sat/arm-none-eabi/lib \
-	    --static -T../ld/stm32vl-discovery.ld -nostartfiles -Wl,--gc-sections -mthumb \
-            -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd -lopencm3_stm32f1 -lc -lgcc -lnosys
-	arm-none-eabi-objcopy -O binary usart_cm3.elf usart_cm3.bin
+	arm-none-eabi-gcc -o usart_cm3.elf usart_cm3.o main_cm3.o $(LDFLAGS) 
+	arm-none-eabi-objcopy -O binary usart_cm3.elf
 
 pwm_cm3.o: pwm_cm3.c
-	arm-none-eabi-gcc -Wall -I../common -I$(HOME)/sat/arm-none-eabi/include \
-           -fno-common -mthumb -mcpu=cortex-m3 -msoft-float -MD -DSTM32F1 \
-           -o pwm_cm3.o -c pwm_cm3.c
+	arm-none-eabi-gcc $(CFLAGS) -c pwm_cm3.c
 
 pwm_cm3.bin: pwm_cm3.o usart_cm3.o
-	arm-none-eabi-gcc -o pwm_cm3.elf pwm_cm3.o usart_cm3.o -lopencm3_stm32f1 --static \
-	    -L$(HOME)/sat/arm-none-eabi/lib \
-            -T../ld/stm32vl-discovery.ld -nostartfiles -Wl,--gc-sections -mthumb \
-            -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd 
+	arm-none-eabi-gcc -o pwm_cm3.elf pwm_cm3.o usart_cm3.o $(LDFLAGS)
 	arm-none-eabi-objcopy -O binary pwm_cm3.elf pwm_cm3.bin	
 
 #LDSCRIPT= ../ld/stm32_flash.ld
@@ -35,7 +29,7 @@ LDSCRIPT= ../ld/stm32vl-discovery.ld
 
 usart_stm32.o: ../common/usart_stm32.c
 	arm-none-eabi-gcc -DSTM32F10X_MD -I./ -c -fno-common -O0 -g3 -I../common \
-           -I/home/jmfriedt/sat/arm-none-eabi/include/stm32f1/ -I/home/jmfriedt/sat/arm-none-eabi/include/ \
+           -I/home/jmfriedt/libopencm3/include/stm32f1/ -I/home/jmfriedt/sat/arm-none-eabi/include/ \
            -Wall -mcpu=cortex-m3 -mthumb -fno-common -mthumb -msoft-float -c -o usart_stm32.o ../common/usart_stm32.c
 
 main_stm32.o: main_stm32.c
