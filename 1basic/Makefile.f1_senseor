@@ -27,7 +27,7 @@ LDSCRIPT= ../ld/stm32f103.ld
 LDFLAGS	= -lopencm3_stm32f1 --static \
 	-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
 	-T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
-	-mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  \
+	-mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd \
         -L$(HOME)/libopencm3/lib
 
 OCFLAGS	=	-Obinary
@@ -71,7 +71,7 @@ all: $(TARGET).bin  $(TARGET).list
 clean:
 	@echo "Removing files..."
 	-find . -name '*.o'   | xargs rm
-	-find ../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel -name '*.o'   | xargs rm
+	-find $(FREERTOS_PATH) -name '*.o'   | xargs rm
 	-find . -name '*.elf' | xargs rm
 	-find . -name '*.lst' | xargs rm
 	-find . -name '*.out' | xargs rm
@@ -79,12 +79,9 @@ clean:
 	-find . -name '*.map' | xargs rm
 	rm ../common/*.o
 
-
 $(TARGET).list: $(TARGET).elf
 	@echo "  OBJDUMP $(TARGET).list"
 	$(OD) $(ODFLAGS) $< > $(TARGET).lst
-
-
 
 $(TARGET).bin: $(TARGET).elf
 	@echo "  OBJCOPY $(TARGET).bin"

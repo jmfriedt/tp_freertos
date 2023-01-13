@@ -18,7 +18,7 @@ CFLAGS	= 	-c -fno-common \
 		-mthumb \
                 -g3 \
 		-DSTM32F1 \
-                -DSTM32F10X_MD \
+                -DSTM32F10X_MD
 #                -DSTM32F10X_LD_VL \
 
 LDSCRIPT= ../ld/stm32f103.ld
@@ -70,7 +70,7 @@ all: $(TARGET).bin  $(TARGET).list
 clean:
 	@echo "Removing files..."
 	-find . -name '*.o'   | xargs rm
-	-find ../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel -name '*.o'   | xargs rm
+	-find $(FREERTOS_PATH) -name '*.o'   | xargs rm
 	-find . -name '*.elf' | xargs rm
 	-find . -name '*.lst' | xargs rm
 	-find . -name '*.out' | xargs rm
