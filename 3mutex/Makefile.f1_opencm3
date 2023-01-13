@@ -18,7 +18,8 @@ CFLAGS	= 	-c -fno-common \
 		-mthumb \
                 -g3 \
                 -DSTM32F10X_LD_VL \
-		-DSTM32F1 
+		-DSTM32F1 \
+                -Dsenseor
 #                -DSTM32F10X_MD
 
 LDSCRIPT= ../ld/stm32f103.ld
