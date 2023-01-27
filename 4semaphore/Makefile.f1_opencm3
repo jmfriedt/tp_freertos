@@ -1,3 +1,4 @@
+FREERTOS=../../FreeRTOSv202112.00
 CROSS_COMPILE =arm-none-eabi-
 CC		= $(CROSS_COMPILE)gcc
 LD		= $(CROSS_COMPILE)ld
@@ -38,8 +39,8 @@ TARGET  = 	$(OUTPUT_DIR)/main
 
 INCLUDE =   -I../\
 	    -I./src/ \
-	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/include/ \
-	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/GCC/ARM_CM3/ \
+	    -I$(FREERTOS)/FreeRTOS/Source/include/ \
+	    -I$(FREERTOS)/FreeRTOS/Source/portable/GCC/ARM_CM3/ \
 	    -I../common \
             -I$(HOME)/libopencm3/include
 
@@ -48,13 +49,13 @@ INCLUDE =   -I../\
 SRCS	=   ./src/main.c \
 	    ../common/freertos_opencm3.c \
 	    ../common/usart_opencm3.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/timers.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/MemMang/heap_2.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/GCC/ARM_CM3/port.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/tasks.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/queue.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/croutine.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/list.c 
+		$(FREERTOS)/FreeRTOS/Source/timers.c \
+		$(FREERTOS)/FreeRTOS/Source/portable/MemMang/heap_2.c \
+		$(FREERTOS)/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
+		$(FREERTOS)/FreeRTOS/Source/tasks.c \
+		$(FREERTOS)/FreeRTOS/Source/queue.c \
+		$(FREERTOS)/FreeRTOS/Source/croutine.c \
+		$(FREERTOS)/FreeRTOS/Source/list.c 
 
 OBJS=$(SRCS:.c=.o)
 
@@ -67,7 +68,7 @@ all: $(TARGET).bin  $(TARGET).list
 clean:
 	@echo "Removing files..."
 	-find . -name '*.o'   | xargs rm
-	-find ../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel -name '*.o'   | xargs rm
+	-find $(FREERTOS)/FreeRTOS/Source -name '*.o'   | xargs rm
 	-find . -name '*.elf' | xargs rm
 	-find . -name '*.lst' | xargs rm
 	-find . -name '*.out' | xargs rm
