@@ -42,8 +42,8 @@ void task_rx(void* p)
 
 int main()
 {
-    Led_Init();
     Usart1_Init();
+    Led_Init();
     srand( 567 );
 #ifdef avec_mutex
   xMutex = xSemaphoreCreateMutex();
