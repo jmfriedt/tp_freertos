@@ -1,0 +1,89 @@
+FREERTOS_PATH=../../FreeRTOSv202212.01/FreeRTOS/Source
+
+CROSS_COMPILE =avr-
+CC		= $(CROSS_COMPILE)gcc
+LD		= $(CROSS_COMPILE)ld
+AR		= $(CROSS_COMPILE)ar
+AS		= $(CROSS_COMPILE)as
+OC		= $(CROSS_COMPILE)objcopy
+OD		= $(CROSS_COMPILE)objdump
+SZ		= $(CROSS_COMPILE)size
+
+CFLAGS	= 	-c -fno-common \
+		-ffunction-sections \
+		-fdata-sections \
+		-Os -mmcu=atmega32u4\
+                -g3 
+
+LDFLAGS	= -mmcu=atmega32u4
+
+OCFLAGS	=	-Obinary
+
+ODFLAGS	=	-S
+
+OUTPUT_DIR = output
+
+TARGET  = 	$(OUTPUT_DIR)/main
+
+INCLUDE =   -I../\
+	    -I./src/ \
+	    -I$(FREERTOS_PATH)/include \
+	    -I$(FREERTOS_PATH)/portable/GCC/Atmega32U4/ \
+	    -I../common \
+
+
+# Add other source files if they are needed e.g. other Firmwarlib Components
+SRCS	=   ./src/main.c \
+		$(FREERTOS_PATH)/timers.c \
+                $(FREERTOS_PATH)/portable/GCC/Atmega32U4/port.c \
+		$(FREERTOS_PATH)/portable/MemMang/heap_3.c \
+		$(FREERTOS_PATH)/tasks.c \
+		$(FREERTOS_PATH)/queue.c \
+		$(FREERTOS_PATH)/list.c \
+		$(FREERTOS_PATH)/croutine.c \
+	        ../common/usart_atmega.c 
+
+OBJS=$(SRCS:.c=.o)
+
+.PHONY : clean all
+
+all: $(TARGET).bin  $(TARGET).list
+	@echo "  SIZE $(TARGET).elf"
+	$(SZ) $(TARGET).elf
+
+clean:
+	@echo "Removing files..."
+	-find . -name '*.o'   | xargs rm
+	-find $(FREERTOS_PATH) -name '*.o'   | xargs rm
+	-find . -name '*.elf' | xargs rm
+	-find . -name '*.lst' | xargs rm
+	-find . -name '*.out' | xargs rm
+	-find . -name '*.bin' | xargs rm
+	-find . -name '*.map' | xargs rm
+	rm ../common/*.o
+
+$(TARGET).list: $(TARGET).elf
+	@echo "  OBJDUMP $(TARGET).list"
+	$(OD) $(ODFLAGS) $< > $(TARGET).lst
+
+$(TARGET).bin: $(TARGET).elf
+	@echo "  OBJCOPY $(TARGET).bin"
+	$(OC) $(OCFLAGS) $(TARGET).elf $(TARGET).bin
+
+$(TARGET).elf: $(OBJS) 
+	@echo "  LD $(TARGET).elf"
+	$(CC) $(LDFLAGS) -o $(TARGET).elf $(OBJS) 
+
+%.o: %.c
+	@echo "  CC $<"
+	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
+
+%.o: %.S
+	@echo "  CC $<"
+	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
+
+flash: output/main.bin
+	avrdude -c avr109 -b57600 -D -p atmega32u4 -P /dev/ttyACM0 -e -U flash:w:output/main.elf
+
+simu: output/main.bin
+	simavr --freq 16000000 --mcu atmega32u4 output/main.elf
