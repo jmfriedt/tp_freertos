@@ -1,5 +1,5 @@
 PATH := /home/jmfriedt/enseignement/sqnx/platforms/stm32/qemu/qemu_stm32/arm-softmmu/:$(PATH)
-FREERTOS_LOCATION=../../FreeRTOSv202112.00
+FREERTOS_LOCATION=/home/jmfriedt/enseignement/sqnx/platforms/stm32/F1/FreeRTOSv202212.01/
 LIBOPENCM3_LOCATION=$(HOME)/libopencm3
 
 CROSS_COMPILE =arm-none-eabi-
