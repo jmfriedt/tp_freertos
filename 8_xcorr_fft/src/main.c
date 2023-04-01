@@ -18,6 +18,12 @@
 xQueueHandle qh1=0,qh2=0;
 xSemaphoreHandle xMutex;
 
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pTaskName)
+{uart_puts("\r\nStack: ");
+ uart_puts(pTaskName);
+ while(1) vTaskDelay(301/portTICK_RATE_MS);
+}
+
 void xcorr(int32_t *x,int32_t *y,int n)
 {int ki,ko;
  int32_t *xc;
@@ -281,7 +287,7 @@ meas[2*N]=3;
                    }
 */
 /// test 
-#define S 4096
+#define S 3192
 
 // if (!(pdPASS == xTaskCreate( do_fft, (const char*) "fft_test", STACK_BYTES(20*N), c0,  1,NULL ))) goto hell;
  if (!(pdPASS == xTaskCreate( do_fft, (const char*) "fft1", STACK_BYTES(S), c1,  1,NULL ))) {uart_puts("1\0");goto hell;}
@@ -289,7 +295,7 @@ meas[2*N]=3;
  if (!(pdPASS == xTaskCreate( do_fft, (const char*) "fftm", STACK_BYTES(S), meas,2,NULL ))) {uart_puts("3\0");goto hell;}
  if (!(pdPASS == xTaskCreate( do_mul, (const char*) "mul",  STACK_BYTES(S), NULL,1,NULL ))) {uart_puts("4\0");goto hell;}
  if (!(pdPASS == xTaskCreate( do_ifft,(const char*) "ifft", STACK_BYTES(S), NULL,1,NULL ))) {uart_puts("5\0");goto hell;}
- if (!(pdPASS == xTaskCreate( do_ps,  (const char*) "ps",   STACK_BYTES(S), NULL,1,NULL ))) {uart_puts("6\0");goto hell;}
+ if (!(pdPASS == xTaskCreate( do_ps,  (const char*) "ps",   STACK_BYTES(512), NULL,1,NULL ))) {uart_puts("6\0");goto hell;}
  vTaskStartScheduler();
  hell:              // should never be reached
    uart_puts("Hell\n\0");
