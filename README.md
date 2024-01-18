@@ -32,5 +32,15 @@ in 1basic/stm32f103.resc
 
 <img src="pictures/renode_uart_and_port.png">
 
-This set of laboratory sessions was devoped independently but happens to closely match the topics of [Beginning STM32: Developing with FreeRTOS, libopencm3 and GCC](https://www.amazon.fr/Beginning-STM32-Developing-FreeRTOS-libopencm3/dp/1484236238) which might provide additional references to my own supporting material found at http://jmfriedt.free.fr under the Master1 section/embedded electronics/2nd semester. The
+This set of laboratory sessions was developed independently but happens to closely match the topics of [Beginning STM32: Developing with FreeRTOS, libopencm3 and GCC](https://www.amazon.fr/Beginning-STM32-Developing-FreeRTOS-libopencm3/dp/1484236238) which might provide additional references to my own supporting material found at http://jmfriedt.free.fr under the Master1 section/embedded electronics/2nd semester. The
 [github](https://github.com/ve3wwg/stm32f103c8t6) might provide complementary resources.
+
+# References (in French)
+
+* Q. Macé, J.-M Friedt, *FreeRTOS : application à la réalisation d'un analyseur de réseau 
+numérique sur STM32*, <a href="http://jmfriedt.free.fr/lm_freertos.pdf">GNU/Linux Magazine France 
+207</a> (Sept. 2017)
+* J.-M Friedt, *Intercorrélation par transformée de Fourier rapide sur microcontroleur sous 
+FreeRTOS, et les pointeurs de pointeurs*, <a href="http://jmfriedt.free.fr/lm_fft.pdf">Hackable 43 
+</a>pp.4-- (Jul.-Aug. 2022)
+* J.-M Friedt, *FreeRTOS dans 2,5 KB de RAM sur Atmega32U4*, <a href="http://jmfriedt.free.fr/hackable_atmega32u4.pdf">Hackable 48</a> (May/June 2023)
