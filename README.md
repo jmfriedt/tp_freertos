@@ -1,4 +1,5 @@
-# tp_freertos
+# FreeRTOS on STM32 laboratory sessions
+
 TP FreeRTOS on STM32F1VLDiscovery board or STM32F103 (update the LD script accordingly)
 
 Assumes the Long Term Supported version of FreeRTOS as available at https://github.com/FreeRTOS/FreeRTOS-LTS 
@@ -35,7 +36,7 @@ in 1basic/stm32f103.resc
 This set of laboratory sessions was developed independently but happens to closely match the topics of [Beginning STM32: Developing with FreeRTOS, libopencm3 and GCC](https://www.amazon.fr/Beginning-STM32-Developing-FreeRTOS-libopencm3/dp/1484236238) which might provide additional references to my own supporting material found at http://jmfriedt.free.fr under the Master1 section/embedded electronics/2nd semester. The
 [github](https://github.com/ve3wwg/stm32f103c8t6) might provide complementary resources.
 
-# References (in French)
+## References (in French)
 
 * Q. Macé, J.-M Friedt, *FreeRTOS : application à la réalisation d'un analyseur de réseau 
 numérique sur STM32*, <a href="http://jmfriedt.free.fr/lm_freertos.pdf">GNU/Linux Magazine France 
