@@ -1,4 +1,4 @@
-FREERTOS_LOCATION=../../FreeRTOSv202212.01
+FREERTOS_LOCATION=../../FreeRTOSv202112.00
 LIBOPENCM3_LOCATION=$(HOME)/libopencm3
 PATH:=../../../qemu/qemu_stm32/arm-softmmu/:$(PATH)
 
@@ -19,8 +19,9 @@ CFLAGS	= 	-c -fno-common \
 		-mthumb \
                 -g3 \
                 -DSTM32F10X_MD \
-		-DSTM32F1 
-                -DSTM32F10X_LD_VL 
+		-DSTM32F1 \
+                -Dsenseor
+#                -DSTM32F10X_LD_VL \
 
 LDSCRIPT= ../ld/stm32vl-discovery.ld
 
