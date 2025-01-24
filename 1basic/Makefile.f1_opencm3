@@ -1,7 +1,7 @@
 PATH := ../../../qemu/qemu_stm32/arm-softmmu/:$(PATH)
 # FREERTOS_PATH=../../FreeRTOSv202212.01/FreeRTOS/Source
 FREERTOS_PATH=../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/
-LIBOPENCM3_LOCATION=$(HOME)/libopencm3
+LIBOPENCM3_PATH=$(HOME)/libopencm3
 
 CROSS_COMPILE =arm-none-eabi-
 CC		= $(CROSS_COMPILE)gcc

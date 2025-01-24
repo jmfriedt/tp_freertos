@@ -4,10 +4,19 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "common.h"
+#include <stdio.h>
 
 void vLedsFloat(void* dummy);
 void vLedsFlash(void* dummy);
 void vPrintUart(void* dummy);
+
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pTaskName)
+{
+ while(1){uart_puts("\r\nStack error: ");
+          uart_puts(pTaskName);
+          vTaskDelay(301/portTICK_RATE_MS);
+         }
+}
 
 int main(void){
  volatile int i;
@@ -15,9 +24,9 @@ int main(void){
  Led_Init();
  Led_Hi1();
 
- if (!(pdPASS == xTaskCreate( vLedsFloat, (signed char*) "LedFloat",64,NULL,1,NULL ))) goto hell;
- if (!(pdPASS == xTaskCreate( vLedsFlash, (signed char*) "LedFlash",64,NULL,2,NULL ))) goto hell;
- if (!(pdPASS == xTaskCreate( vPrintUart, (signed char*) "Uart",    64,NULL,3,NULL ))) goto hell;
+ if (!(pdPASS == xTaskCreate( vLedsFloat, (signed char*) "LedFloat", 64,NULL,1,NULL ))) goto hell;
+ if (!(pdPASS == xTaskCreate( vLedsFlash, (signed char*) "LedFlash", 64,NULL,2,NULL ))) goto hell;
+ if (!(pdPASS == xTaskCreate( vPrintUart, (signed char*) "Uart",    256,NULL,3,NULL ))) goto hell;
 
  vTaskStartScheduler();
 hell:              // should never be reached
@@ -48,7 +57,16 @@ void vPrintUart(void* dummy)
 {char c[256];
  portTickType last_wakeup_time;
  last_wakeup_time = xTaskGetTickCount();
- while(1){uart_puts("\nHello World\r\n");
+ while(1){sprintf(c,"\nHello World\r\n");
+          uart_puts(c);
+          //uart_puts("\nHello World\r\n");
+//#define configUSE_TRACE_FACILITY        1
+//#define configUSE_STATS_FORMATTING_FUNCTIONS    1
+          //vTaskList(c);
+          //uart_puts(c);
+          //uart_putc('0');
+          //uart_putc('\r');
+          //uart_putc('\n');
 	  vTaskDelayUntil(&last_wakeup_time, 500/portTICK_RATE_MS);
 	}
 }
