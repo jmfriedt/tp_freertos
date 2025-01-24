@@ -1,5 +1,7 @@
-PATH := /home/jmfriedt/enseignement/sqnx/platforms/stm32/qemu/qemu_stm32/arm-softmmu/:$(PATH)
-FREERTOS_PATH=../../FreeRTOSv202112.00/FreeRTOS/Source
+PATH := ../../../qemu/qemu_stm32/arm-softmmu/:$(PATH)
+# FREERTOS_PATH=../../FreeRTOSv202212.01/FreeRTOS/Source
+FREERTOS_PATH=../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/
+LIBOPENCM3_LOCATION=$(HOME)/libopencm3
 
 CROSS_COMPILE =arm-none-eabi-
 CC		= $(CROSS_COMPILE)gcc
@@ -19,9 +21,10 @@ CFLAGS	= 	-c -fno-common \
                 -g3 \
 		-DSTM32F1 \
                 -DSTM32F10X_MD
-#                -DSTM32F10X_LD_VL \
+#                -DSTM32F10X_LD_VL
 
-LDSCRIPT= ../ld/stm32f103.ld
+# LDSCRIPT= ../ld/stm32f103.ld
+LDSCRIPT= ../ld/stm32vl-discovery.ld
 
 LDFLAGS	= -lopencm3_stm32f1 --static \
 	-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
@@ -44,7 +47,8 @@ INCLUDE =   -I../\
 	    -I$(FREERTOS_PATH)/include \
 	    -I$(FREERTOS_PATH)/portable/GCC/ARM_CM3/ \
 	    -I../common \
-            -I$(HOME)/libopencm3 -I$(HOME)/libopencm3/include
+            -I$(LIBOPENCM3_PATH)/include \
+
 
 
 # Add other source files if they are needed e.g. other Firmwarlib Components
@@ -78,12 +82,9 @@ clean:
 	-find . -name '*.map' | xargs rm
 	rm ../common/*.o
 
-
 $(TARGET).list: $(TARGET).elf
 	@echo "  OBJDUMP $(TARGET).list"
 	$(OD) $(ODFLAGS) $< > $(TARGET).lst
-
-
 
 $(TARGET).bin: $(TARGET).elf
 	@echo "  OBJCOPY $(TARGET).bin"
@@ -106,5 +107,5 @@ flash: output/main.bin
 #	st-flash write output/main.bin 0x8000000
 
 qemu: output/main.bin
-	qemu-system-arm -M stm32-p103 -serial stdio -serial stdio -serial stdio -kernel output/main.bin
-
+	qemu-system-arm -M stm32vldiscovery -serial stdio -kernel output/main.bin
+	# qemu-system-arm -M stm32-p103 -serial stdio -serial stdio -serial stdio -kernel output/main.bin

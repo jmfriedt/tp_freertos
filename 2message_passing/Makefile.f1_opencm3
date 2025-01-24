@@ -1,6 +1,7 @@
-FREERTOS_LOCATION=../../FreeRTOSv202212.01
+PATH := ../../../qemu/qemu_stm32/arm-softmmu/:$(PATH)
+# FREERTOS_PATH=../../FreeRTOSv202212.01/FreeRTOS/Source
+FREERTOS_PATH=../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/
 LIBOPENCM3_LOCATION=$(HOME)/libopencm3
-PATH:=../../../qemu/qemu_stm32/arm-softmmu/:$(PATH)
 
 CROSS_COMPILE =arm-none-eabi-
 CC		= $(CROSS_COMPILE)gcc
@@ -20,7 +21,7 @@ CFLAGS	= 	-c -fno-common \
                 -g3 \
                 -DSTM32F10X_MD \
 		-DSTM32F1 
-                -DSTM32F10X_LD_VL 
+#                -DSTM32F10X_LD_VL 
 
 LDSCRIPT= ../ld/stm32vl-discovery.ld
 
@@ -42,10 +43,10 @@ TARGET  = 	$(OUTPUT_DIR)/main
 
 INCLUDE =   -I../\
 	    -I./src/ \
-	    -I$(FREERTOS_LOCATION)/FreeRTOS/Source/include/ \
-	    -I$(FREERTOS_LOCATION)/FreeRTOS/Source/portable/GCC/ARM_CM3/ \
+	    -I$(FREERTOS_PATH)/include \
+	    -I$(FREERTOS_PATH)/portable/GCC/ARM_CM3/ \
 	    -I../common \
-            -I$(LIBOPENCM3_LOCATION)/include \
+            -I$(LIBOPENCM3_PATH)/include \
 	    -I../CMSIS/Include
 
 
@@ -53,13 +54,13 @@ INCLUDE =   -I../\
 SRCS	=   ./src/main.c \
 	    ../common/freertos_opencm3.c \
 	    ../common/usart_opencm3.c \
-		$(FREERTOS_LOCATION)/FreeRTOS/Source/timers.c \
-		$(FREERTOS_LOCATION)/FreeRTOS/Source/portable/MemMang/heap_2.c \
-		$(FREERTOS_LOCATION)/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
-		$(FREERTOS_LOCATION)/FreeRTOS/Source/tasks.c \
-		$(FREERTOS_LOCATION)/FreeRTOS/Source/queue.c \
-		$(FREERTOS_LOCATION)/FreeRTOS/Source/croutine.c \
-		$(FREERTOS_LOCATION)/FreeRTOS/Source/list.c 
+		$(FREERTOS_PATH)/timers.c \
+		$(FREERTOS_PATH)/portable/MemMang/heap_2.c \
+		$(FREERTOS_PATH)/portable/GCC/ARM_CM3/port.c \
+		$(FREERTOS_PATH)/tasks.c \
+		$(FREERTOS_PATH)/queue.c \
+		$(FREERTOS_PATH)/croutine.c \
+		$(FREERTOS_PATH)/list.c 
 
 OBJS=$(SRCS:.c=.o)
 
@@ -72,7 +73,7 @@ all: $(TARGET).bin  $(TARGET).list
 clean:
 	@echo "Removing files..."
 	-find . -name '*.o'   | xargs rm
-	-find $(FREERTOS_LOCATION)/FreeRTOS/Source -name '*.o'   | xargs rm
+	-find $(FREERTOS_PATH) -name '*.o'   | xargs rm
 	-find . -name '*.elf' | xargs rm
 	-find . -name '*.lst' | xargs rm
 	-find . -name '*.out' | xargs rm
