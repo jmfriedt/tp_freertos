@@ -44,7 +44,8 @@ exec_gdb: usart_cm3.bin
 	../../qemu/qemu_stm32/arm-softmmu/qemu-system-arm  -M stm32-p103 -serial stdio -serial stdio -kernel usart_cm3.bin -s -S -nographic
 
 flash: usart_cm3.bin
-	stm32flash.sh -w usart_cm3.bin /dev/ttyUSB0
+	st-flash write usart_cm3.bin 0x8000000
+#	stm32flash.sh -w usart_cm3.bin /dev/ttyUSB0
 
 clean:
 	rm *.o *.bin *.d *.elf DAC*
