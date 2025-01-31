@@ -10,14 +10,6 @@ void vLedsFloat(void* dummy);
 void vLedsFlash(void* dummy);
 void vPrintUart(void* dummy);
 
-void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pTaskName)
-{
- while(1){uart_puts("\r\nStack error: ");
-          uart_puts(pTaskName);
-          vTaskDelay(301/portTICK_RATE_MS);
-         }
-}
-
 int main(void){
  volatile int i;
  Usart1_Init(); // inits clock as well
@@ -26,7 +18,7 @@ int main(void){
 
  if (!(pdPASS == xTaskCreate( vLedsFloat, (signed char*) "LedFloat", 64,NULL,1,NULL ))) goto hell;
  if (!(pdPASS == xTaskCreate( vLedsFlash, (signed char*) "LedFlash", 64,NULL,2,NULL ))) goto hell;
- if (!(pdPASS == xTaskCreate( vPrintUart, (signed char*) "Uart",    256,NULL,3,NULL ))) goto hell;
+ if (!(pdPASS == xTaskCreate( vPrintUart, (signed char*) "Uart",     64,NULL,3,NULL ))) goto hell;
 
  vTaskStartScheduler();
 hell:              // should never be reached
@@ -54,7 +46,7 @@ void vLedsFlash(void* dummy)
 
 /* Writes each 500 ms */
 void vPrintUart(void* dummy)
-{char c[256];
+{char c[32];
  portTickType last_wakeup_time;
  last_wakeup_time = xTaskGetTickCount();
  while(1){sprintf(c,"\nHello World\r\n");

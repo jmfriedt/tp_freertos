@@ -61,16 +61,15 @@ void task_rx(void* p)
 }
 
 int main()
-{Led_Init();
+{
  Usart1_Init();
+ Led_Init();
 
-  qh = xQueueCreate(1, sizeof(int));
-
+ qh = xQueueCreate(1, sizeof(int));
 //  activer ces fonctions fait atteindre le timeout de transfert de donnees dans la queue
 //    if (!(pdPASS == xTaskCreate( vLedsFloat, ( signed char * ) "LedFloat", 128, NULL, 2, NULL ))) goto hell;
 //    if (!(pdPASS == xTaskCreate( vLedsFlash, ( signed char * ) "LedFlash", 128, NULL, 2, NULL ))) goto hell;
 //    if (!(pdPASS == xTaskCreate( vPrintUart, ( signed char * ) "Uart",     128, NULL, 2, NULL ))) goto hell;
-
    xTaskCreate(task_tx, (signed char*)"t1", (128), 0, 2, 0);
    xTaskCreate(task_rx, (signed char*)"t2", (128), 0, 2, 0);
    vTaskStartScheduler();
