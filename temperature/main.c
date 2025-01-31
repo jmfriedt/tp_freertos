@@ -1,6 +1,6 @@
 #include "common.h"
 #include <libopencm3/stm32/usart.h>
-
+#include "affiche.h"
 
 //#define avec_newlib
 #ifdef avec_newlib

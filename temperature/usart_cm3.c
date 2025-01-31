@@ -15,8 +15,7 @@ int _write(int file, char *ptr, int len);
 #endif
 
 void clock_setup(void)
-{
- rcc_clock_setup_in_hse_8mhz_out_72mhz();  // STM32F103
+{ rcc_clock_setup_pll(&rcc_hse_configs[RCC_CLOCK_HSE8_72MHZ]); // rcc_clock_setup_in_hse_8mhz_out_72mhz();  // STM32F103
   rcc_periph_clock_enable(RCC_GPIOC); // Enable GPIOC clock
   rcc_periph_clock_enable(RCC_GPIOD); // Enable GPIOD clock for F4 (LEDs)
   rcc_periph_clock_enable(RCC_GPIOA); // Enable GPIOA clock
