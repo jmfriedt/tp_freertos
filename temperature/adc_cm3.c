@@ -29,7 +29,7 @@ void adc_setup(void)
 }
 
 unsigned short read_adc_naiive(unsigned char channel)
-{int c;
+{// int c;
   unsigned char channel_array[16];
   channel_array[0] = channel;
   adc_set_regular_sequence(ADC1, 1, channel_array);
