@@ -1,0 +1,21 @@
+all: usart_pc 
+
+CFLAGS=-Wall 
+
+main.o: main.c
+	gcc $(CFLAGS) -c $^
+
+usart_pc.o: usart_pc.c
+	gcc $(CFLAGS) -c $^
+
+usart_pc: main.o usart_pc.o affiche.o
+	gcc -o usart_pc usart_pc.o main.o affiche.o -lm
+
+affiche.o: affiche.c
+	gcc -c $^
+
+exec: usart_pc
+	./usart_pc
+
+clean:
+	rm *.o *.bin *.d *.elf DAC*
