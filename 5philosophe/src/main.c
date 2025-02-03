@@ -15,14 +15,22 @@ void func(void* p)
      if (xSemaphoreTake(xMutex[numero],500/portTICK_RATE_MS)==pdFALSE)
         {uart_putc('u'+numero);
          uart_puts("ng\r\n\0");
-         xSemaphoreGive( xMutex[numero] );
         }
-     xSemaphoreTake( xMutex[(numero+1)%NB_PHILO], portMAX_DELAY );
-     uart_putc('A'+numero);vTaskDelay(500 / portTICK_RATE_MS);
-     xSemaphoreGive( xMutex[numero] );
-     xSemaphoreGive( xMutex[(numero+1)%NB_PHILO] );
-     uart_putc('0'+numero);
-     mange[numero]=1;
+     else
+        {if (xSemaphoreTake( xMutex[(numero+1)%NB_PHILO], portMAX_DELAY )==pdFALSE)
+            {xSemaphoreGive( xMutex[numero] );
+             uart_putc('U'+numero);
+             uart_puts("ng\r\n\0");
+            }
+         else
+            {
+             uart_putc('A'+numero);vTaskDelay(500 / portTICK_RATE_MS);
+             xSemaphoreGive( xMutex[numero] );
+             xSemaphoreGive( xMutex[(numero+1)%NB_PHILO] );
+             uart_putc('0'+numero);
+             mange[numero]=1;
+            }
+        }
     }
   while (1) { vTaskDelay(100 / portTICK_RATE_MS); }; // on n'a jamais le droit de finir toutes les taches
 }
