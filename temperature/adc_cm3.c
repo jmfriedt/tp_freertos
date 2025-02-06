@@ -2,6 +2,8 @@
 #include <libopencm3/stm32/adc.h>
 #include <libopencm3/stm32/gpio.h>
 
+// See https://github.com/libopencm3/libopencm3-examples/blob/master/examples/stm32/f1/stm32vl-discovery/adc-dac-printf/adc-dac-printf.c
+
 void adc_setup(void)
 {	rcc_periph_clock_enable(RCC_GPIOA);
         rcc_periph_clock_enable(RCC_ADC1);
@@ -33,10 +35,9 @@ unsigned short read_adc_naiive(unsigned char channel)
   unsigned char channel_array[16];
   channel_array[0] = channel;
   adc_set_regular_sequence(ADC1, 1, channel_array);
-// while (!adc_eoc(ADC1));
 //  adc_set_sample_time(ADC1, channel, ADC_SMPR_SMP_1DOT5CYC);
-//  adc_start_conversion_direct(ADC1);
- adc_start_conversion_regular(ADC1);
+//  adc_start_conversion_regular(ADC1);
+  adc_start_conversion_direct(ADC1);
  while (! adc_eoc(ADC1));
  // do {c=*(long*)ADC1_BASE;} while ((c & ADC_SR_EOC) ==0);
 

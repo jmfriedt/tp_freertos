@@ -1,18 +1,19 @@
 all: usart_cm3.bin 
 
 # basic configuration
-CFLAGS= -g -Wall -MD -I$(HOME)/libopencm3/include -mthumb -DSTM32F1 -DSTM32F10X_MD \
+# CFLAGS= -g -Wall -MD -I$(HOME)/libopencm3/include -mthumb -DSTM32F1 -DSTM32F10X_MD \
 	-mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  # STM32F103 = Medium Device
+CFLAGS= -g -Wall -MD -I$(HOME)/libopencm3/include -mthumb -DSTM32F1 -DSTM32F10X_LD_VL \
+	-mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  # STM32F100 = Low Device
 
 LDFLAGS = -lopencm3_stm32f1 \
           -T stm32_cm3.ld  \
           -L$(HOME)/libopencm3/lib --static \
           -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  \
-          -Wl,--gc-sections -mthumb \
-          -Wl,--start-group -lnosys -Wl,--end-group
+          -Wl,--gc-sections -mthumb
 
 # uncomment to use newlib 
-#LDFLAGS+= -lm
+#LDFLAGS+= -lm -lnosys 
 #CFLAGS +=-Davec_newlib
 
 syscalls.o: syscalls.c

@@ -19,7 +19,7 @@ int main(void)
   adc_setup();
   
   while (1) {
-//    if (c&0x01) {Led_Hi1();Led_Hi2();} else {Led_Lo1();Led_Lo2();}
+    if (c&0x01) {Led_Hi1();Led_Hi2();} else {Led_Lo1();Led_Lo2();}
     c = (c == 9) ? 0 : c + 1;	// cyclic increment c
     res=read_adc_naiive(1);
 #ifndef avec_newlib
