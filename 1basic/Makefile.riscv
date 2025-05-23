@@ -1,0 +1,89 @@
+FREERTOS_PATH=../../FreeRTOS-Kernel/
+
+CROSS_COMPILE =riscv32-unknown-elf-
+CC		= $(CROSS_COMPILE)gcc
+LD		= $(CROSS_COMPILE)ld
+AR		= $(CROSS_COMPILE)ar
+AS		= $(CROSS_COMPILE)as
+OC		= $(CROSS_COMPILE)objcopy
+OD		= $(CROSS_COMPILE)objdump
+SZ		= $(CROSS_COMPILE)size
+
+CFLAGS	= 	-c -fno-common \
+		-ffunction-sections \
+		-fdata-sections \
+                -march=rv32i_zicsr -mabi=ilp32 \
+                -g3 \
+ # -march=rv64gc -mabi=lp64d \
+
+LDFLAGS	= -march=rv32i_zicsr -mabi=ilp32 -Wall -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wsign-compare -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wunused -I$(FREERTOS_PATH)/portable/GCC/RISC-V/chip_specific_extensions/RV32I_CLINT_no_extensions/
+
+OCFLAGS	=	-Obinary
+
+ODFLAGS	=	-S
+
+OUTPUT_DIR = output
+
+TARGET  = 	$(OUTPUT_DIR)/main
+
+
+INCLUDE =   -I../\
+	    -I./src/ \
+	    -I$(FREERTOS_PATH)/include \
+	    -I$(FREERTOS_PATH)/portable/GCC/RISC-V/ \
+	    -I../common \
+            -I$(LIBOPENCM3_PATH)/include \
+
+# Add other source files if they are needed e.g. other Firmwarlib Components
+SRCS	=   ./src/main.c \
+	    ../common/usart_dummy.c \
+		$(FREERTOS_PATH)/timers.c \
+		$(FREERTOS_PATH)/portable/MemMang/heap_1.c \
+		$(FREERTOS_PATH)/portable/GCC/RISC-V/port.c \
+                $(FREERTOS_PATH)/portable/GCC/RISC-V/portASM.S \
+		$(FREERTOS_PATH)/tasks.c \
+		$(FREERTOS_PATH)/queue.c \
+		$(FREERTOS_PATH)/croutine.c \
+		$(FREERTOS_PATH)/list.c 
+
+OBJS=$(SRCS:.c=.o)
+
+.PHONY : clean all
+
+all: $(TARGET).bin  $(TARGET).list
+	@echo "  SIZE $(TARGET).elf"
+	$(SZ) $(TARGET).elf
+
+clean:
+	@echo "Removing files..."
+	-find . -name '*.o'   | xargs rm
+	-find $(FREERTOS_PATH) -name '*.o'   | xargs rm
+	-find . -name '*.elf' | xargs rm
+	-find . -name '*.lst' | xargs rm
+	-find . -name '*.out' | xargs rm
+	-find . -name '*.bin' | xargs rm
+	-find . -name '*.map' | xargs rm
+	rm ../common/*.o
+
+$(TARGET).list: $(TARGET).elf
+	@echo "  OBJDUMP $(TARGET).list"
+	$(OD) $(ODFLAGS) $< > $(TARGET).lst
+
+$(TARGET).bin: $(TARGET).elf
+	@echo "  OBJCOPY $(TARGET).bin"
+	$(OC) $(OCFLAGS) $(TARGET).elf $(TARGET).bin
+
+$(TARGET).elf: $(OBJS) 
+	@echo "  LD $(TARGET).elf"
+	$(CC) $(LDFLAGS) -o $(TARGET).elf $(OBJS)
+
+%.o: %.c
+	@echo "  CC $<"
+	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
+
+%.o: %.S
+	@echo "  CC $<"
+	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
+
+qemu: output/main.bin
+	qemu-system-riscv32 -s -S -M spike -nographic -kernel output/main.bin

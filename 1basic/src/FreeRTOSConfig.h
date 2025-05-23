@@ -68,6 +68,10 @@
 
 #define STACK_BYTES(x)                  ((x)/4) /* freeRTOS allocates 4-times the size given due to 32-bit ARM */
 
+#define configMTIME_BASE_ADDRESS        0
+#define configMTIMECMP_BASE_ADDRESS     0
+// #define configISR_STACK_SIZE_WORDS (500)
+
 #define configUSE_PREEMPTION		1
 #define configUSE_IDLE_HOOK		0
 #define configUSE_TICK_HOOK		0
