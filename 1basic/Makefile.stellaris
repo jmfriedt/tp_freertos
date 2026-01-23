@@ -1,3 +1,5 @@
+FREERTOS_PATH=../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/
+
 CROSS_COMPILE =arm-none-eabi-
 CC		= $(CROSS_COMPILE)gcc
 LD		= $(CROSS_COMPILE)ld
@@ -32,23 +34,24 @@ TARGET  = 	$(OUTPUT_DIR)/main
 
 INCLUDE =   -I../\
 	    -I./src/ \
-	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/include/ \
-	    -I../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/GCC/ARM_CM3/ \
+	    -I$(FREERTOS_PATH)/include/ \
+	    -I$(FREERTOS_PATH)/portable/GCC/ARM_CM3/ \
 	    -I../common \
-            -I$(HOME)/libopencm3/include
-
+ 	    -I$(HOME)/libopencm3/include/
 
 # Add other source files if they are needed e.g. other Firmwarlib Components
 SRCS	=   ./src/main.c \
 	    ../common/freertos_opencm3.c \
 	    ../common/usart_stellaris.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/timers.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/MemMang/heap_2.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/portable/GCC/ARM_CM3/port.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/tasks.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/queue.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/croutine.c \
-		../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/list.c 
+
+
+		$(FREERTOS_PATH)/timers.c \
+		$(FREERTOS_PATH)/portable/MemMang/heap_4.c \
+		$(FREERTOS_PATH)/portable/GCC/ARM_CM3/port.c \
+		$(FREERTOS_PATH)/tasks.c \
+		$(FREERTOS_PATH)/queue.c \
+		$(FREERTOS_PATH)/croutine.c \
+		$(FREERTOS_PATH)/list.c 
 
 OBJS=$(SRCS:.c=.o)
 

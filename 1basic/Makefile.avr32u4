@@ -1,4 +1,4 @@
-FREERTOS_PATH=../../FreeRTOSv202212.01/FreeRTOS/Source
+FREERTOS_PATH=../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/
 
 CROSS_COMPILE =avr-
 CC		= $(CROSS_COMPILE)gcc
@@ -36,7 +36,7 @@ INCLUDE =   -I../\
 SRCS	=   ./src/main.c \
 		$(FREERTOS_PATH)/timers.c \
                 $(FREERTOS_PATH)/portable/GCC/Atmega32U4/port.c \
-		$(FREERTOS_PATH)/portable/MemMang/heap_3.c \
+		$(FREERTOS_PATH)/portable/MemMang/heap_4.c \
 		$(FREERTOS_PATH)/tasks.c \
 		$(FREERTOS_PATH)/queue.c \
 		$(FREERTOS_PATH)/list.c \

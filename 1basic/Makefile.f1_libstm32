@@ -45,7 +45,7 @@ INCLUDE =   -I../\
 SRCS	=   ./src/main.c \
 	    ../common/usart_stm32.c \
 		../../FreeRTOSv9.0.0/FreeRTOS/Source/timers.c \
-		../../FreeRTOSv9.0.0/FreeRTOS/Source/portable/MemMang/heap_2.c \
+		../../FreeRTOSv9.0.0/FreeRTOS/Source/portable/MemMang/heap_4.c \
 		../../FreeRTOSv9.0.0/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
 		../../FreeRTOSv9.0.0/FreeRTOS/Source/tasks.c \
 		../../FreeRTOSv9.0.0/FreeRTOS/Source/queue.c \

@@ -1,4 +1,4 @@
-FREERTOS_PATH=../../FreeRTOS-Kernel/
+FREERTOS_PATH=../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/
 
 CROSS_COMPILE =riscv32-unknown-elf-
 CC		= $(CROSS_COMPILE)gcc
@@ -38,7 +38,7 @@ INCLUDE =   -I../\
 SRCS	=   ./src/main.c \
 	    ../common/usart_dummy.c \
 		$(FREERTOS_PATH)/timers.c \
-		$(FREERTOS_PATH)/portable/MemMang/heap_1.c \
+		$(FREERTOS_PATH)/portable/MemMang/heap_4.c \
 		$(FREERTOS_PATH)/portable/GCC/RISC-V/port.c \
                 $(FREERTOS_PATH)/portable/GCC/RISC-V/portASM.S \
 		$(FREERTOS_PATH)/tasks.c \
