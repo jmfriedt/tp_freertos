@@ -22,7 +22,9 @@ void task1(void* p)
 
     while (globale==0) vTaskDelay( 1/portTICK_RATE_MS ); // ici, ne pas mettre attente bloque
     globale=0;
+#ifndef avec_sema
     uart_puts("sem take\r\n\0");
+#endif
 // ici on demontre que le semaphore est bien fait car il rend la main en cas de blocage,
 // contrairement au cas de la variable globale qui, en l'absence de Delay, va bloquer sur
 // la tache prioritaire qui ne rend pas la main
