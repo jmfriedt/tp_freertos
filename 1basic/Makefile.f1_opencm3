@@ -94,11 +94,11 @@ $(TARGET).elf: $(OBJS)
 	@echo "  LD $(TARGET).elf"
 	$(CC)  -o $(TARGET).elf $(OBJS) $(LDFLAGS)
 
-%.o: %.c
+%.o: %.c src/FreeRTOSConfig.h
 	@echo "  CC $<"
 	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
 
-%.o: %.S
+%.o: %.S src/FreeRTOSConfig.h
 	@echo "  CC $<"
 	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
 
