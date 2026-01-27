@@ -99,5 +99,10 @@ $(TARGET).elf: $(OBJS)
 	@echo "  CC $<"
 	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
 
+qemu: output/main.bin
+	/usr/bin/qemu-system-arm -monitor none -M olimex-stm32-h405 -serial stdio -kernel output/main.bin -nographic
+# Make sure to comment libopencm3/lib/stm32/f4/rcc
+# ll.537 and 544 (infinite loop on oscillator wakeup)
+
 flash: output/main.bin
 	st-flash write output/main.bin 0x8000000

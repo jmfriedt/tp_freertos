@@ -4,8 +4,8 @@ mach create
 machine LoadPlatformDescription @platforms/cpus/stm32f103.repl
 machine LoadPlatformDescription @stm32f1_led.repl
 
-showAnalyzer uart2
-showAnalyzer uart1
+showAnalyzer usart2
+showAnalyzer usart1
 peripherals
 logLevel -1 sysbus.gpioPortC.Led2
 logLevel -1 sysbus.gpioPortC.Led1

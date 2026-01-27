@@ -4,3 +4,5 @@ verified FreeRTOS v9/libopencm3 on STM32F1
 verified FreeRTOS v9/libopencm3 on STM32F4
 
 $HOME/qemu_stm32/arm-softmmu/qemu-system-arm -M stm32-p103 -serial stdio -serial stdio -serial stdio -kernel output/main.bin 
+
+to reset the Renode emulator: ``machine Reset``
