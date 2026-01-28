@@ -30,6 +30,3 @@ MEMORY
 /* Include the common ld script. */
 /* INCLUDE libopencm3_stm32f4.ld <- old version of libopencm3 linker scripts */
 INCLUDE cortex-m-generic.ld
-
-
-

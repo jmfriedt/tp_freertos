@@ -102,8 +102,8 @@ void Led_Lo1(void) {gpio_clear(GPIOC, GPIO9);gpio_clear(GPIOC, GPIO2);gpio_clear
 void Led_Hi2(void) {gpio_set  (GPIOC, GPIO8);gpio_set  (GPIOC, GPIO1);}
 void Led_Lo2(void) {gpio_clear(GPIOC, GPIO8);gpio_clear(GPIOC, GPIO1);}
 #else
-void Led_Hi1(void) {gpio_set  (GPIOC, GPIO1);}
-void Led_Lo1(void) {gpio_clear(GPIOC, GPIO1);}
+void Led_Hi1(void) {gpio_set  (GPIOC, GPIO1);gpio_set  (GPIOC, GPIO12); /*qemu*/}
+void Led_Lo1(void) {gpio_clear(GPIOC, GPIO1);gpio_clear(GPIOC, GPIO12); /*qemu*/}
 void Led_Hi2(void) {gpio_set  (GPIOC, GPIO2);}
 void Led_Lo2(void) {gpio_clear(GPIOC, GPIO2);}
 #endif
