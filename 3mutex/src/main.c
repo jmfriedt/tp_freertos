@@ -36,7 +36,7 @@ void task_rx(void* p)
 #endif
     vTaskDelay( ( rand() & 0x5 ) );  // essayer de deplacer le delay sous cette '}' pour ne pas alterner
     }
-    aff[0]=' ';aff[1]=global+'0';aff[2]=' ';aff[3]=0;uart_puts(aff);
+    aff[0]=' ';aff[1]=global+'0'; aff[2]=' ';aff[3]=0;uart_puts(aff);
     while (1) vTaskDelay( ( rand() & 0x5 ) ); // on n'a jamais le droit de finir toutes les taches
 }
 

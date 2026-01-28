@@ -1,5 +1,5 @@
-PATH := /home/jmfriedt/enseignement/sqnx/platforms/stm32/qemu/qemu_stm32/arm-softmmu/:$(PATH)
-FREERTOS_PATH=../../FreeRTOSv202112.00/FreeRTOS/Source
+PATH := $(HOME)/enseignement/sqnx/platforms/stm32/qemu/qemu_stm32/arm-softmmu/:$(PATH)
+FREERTOS_PATH=../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel/
 
 CROSS_COMPILE =arm-none-eabi-
 CC		= $(CROSS_COMPILE)gcc
@@ -53,7 +53,7 @@ SRCS	=   ./src/main.c \
 	    ../common/freertos_opencm3.c \
 	    ../common/usart_opencm3.c \
 		$(FREERTOS_PATH)/timers.c \
-		$(FREERTOS_PATH)/portable/MemMang/heap_2.c \
+		$(FREERTOS_PATH)/portable/MemMang/heap_4.c \
 		$(FREERTOS_PATH)/portable/GCC/ARM_CM3/port.c \
 		$(FREERTOS_PATH)/tasks.c \
 		$(FREERTOS_PATH)/queue.c \
