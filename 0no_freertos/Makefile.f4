@@ -1,7 +1,7 @@
 all: usart_cm3.bin
 
 usart_cm3.bin: usart_cm3.elf
-	arm-none-eabi-objcopy -O binary usart_cm3.elf usart_cm3.bin	
+	arm-none-eabi-objcopy -O binary usart_cm3.elf usart_cm3.bin
 
 usart_cm3.o: ../common/usart_opencm3.c
 	arm-none-eabi-gcc -Wall -I$(HOME)/libopencm3/include \

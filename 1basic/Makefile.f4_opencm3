@@ -27,7 +27,7 @@ LDFLAGS = -lopencm3_stm32f4 --static \
         -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
         -T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections -mthumb \
         -MD -mcpu=cortex-m4 -mhard-float -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
-        -L$(HOME)/libopencm3
+        -L$(HOME)/libopencm3/lib
 # -lc -lgcc -lnosys necessaires pour afficher vTaskList
 
 
@@ -53,8 +53,6 @@ SRCS	=   ./src/main.c \
 	    ../common/freertos_opencm3.c \
 	    ../common/usart_opencm3.c \
 	    ../common/stm32f4_initialisation.c \
-
-
 		$(FREERTOS_PATH)/timers.c \
 		$(FREERTOS_PATH)/portable/MemMang/heap_4.c \
 		$(FREERTOS_PATH)/portable/GCC/ARM_CM4F/port.c \

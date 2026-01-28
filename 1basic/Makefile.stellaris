@@ -64,7 +64,7 @@ all: $(TARGET).bin  $(TARGET).list
 clean:
 	@echo "Removing files..."
 	-find . -name '*.o'   | xargs rm
-	-find ../../FreeRTOS-LTS/FreeRTOS/FreeRTOS-Kernel -name '*.o'   | xargs rm
+	-find $(FREERTOS_PATH) -name '*.o'   | xargs rm
 	-find . -name '*.elf' | xargs rm
 	-find . -name '*.lst' | xargs rm
 	-find . -name '*.out' | xargs rm
@@ -80,11 +80,11 @@ $(TARGET).bin: $(TARGET).elf
 	@echo "  OBJCOPY $(TARGET).bin"
 	$(OC) $(OCFLAGS) $(TARGET).elf $(TARGET).bin
 
-$(TARGET).elf: $(OBJS) 
+$(TARGET).elf: $(OBJS)
 	@echo "  LD $(TARGET).elf"
 	$(CC)  -o $(TARGET).elf $(OBJS) $(LDFLAGS)
 
-%.o: %.c
+%.o: %.c src/FreeRTOSConfig.h
 	@echo "  CC $<"
 	$(CC) $(INCLUDE) $(CFLAGS)  $< -o $*.o
 
