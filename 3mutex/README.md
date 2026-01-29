@@ -1,9 +1,9 @@
-## MUTEX
+# MUTEX
 
 Demonstration with the scheduler task swapping when UART communications last
 too long, unless protected by MUTEX.
 
-# qemu
+## qemu
 
 Functional with Andre Beckus Qemu, but with the official ``qemu-system-arm``, UART
 timing is not implemented for the STM32F1 emulation, only for the STM32F4.
