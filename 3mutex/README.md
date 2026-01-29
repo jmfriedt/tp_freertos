@@ -38,3 +38,16 @@ index 99c77fa7..83dfffd3 100644
 ```
 to avoid locking the emulator in the HSE or PLL initialization step (the same applies for 
 emulating the STM32F1 on Andre Beckus qemu).
+
+To test:
+```
+make qemu
+```
+
+## Renode
+
+To test:
+```
+make renode
+```
+requiring ``../1basic/stm32f103.resc`` and ``../1basic/stm32f1_led.repl``
