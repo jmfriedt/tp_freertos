@@ -4,6 +4,6 @@
 [submodule "kissfft"]
 	path = kissfft
 	url = https://github.com/mborgerding/kissfft
-[submodule "common/zybo-z7-baremetal"]
-	path = common/zybo-z7-baremetal
-	url = https://github.com/master-elise/zybo-z7-baremetal
+[submodule "common/redpitaya-baremetal"]
+	path = common/redpitaya-baremetal
+	url = https://github.com/master-elise/redpitaya-baremetal
