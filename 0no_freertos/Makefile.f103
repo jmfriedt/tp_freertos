@@ -3,8 +3,8 @@ all: usart_cm3.bin pwm_cm3.bin # usart_stm32.bin
 LIBOPENCM3=$(HOME)/libopencm3/
 CFLAGS=-Wall -I../common -fno-common -mthumb -mcpu=cortex-m3 -I$(LIBOPENCM3)/include \
        -msoft-float -MD -DSTM32F1 -DSTM32F10X_MD -Dsenseor
-LDFLAGS= -L$(LIBOPENCM3)/lib --static -T../ld/stm32vl-discovery.ld -nostartfiles -Wl,--gc-sections -mthumb \
-            -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  -lgcc -lc -lopencm3_stm32f1 -lnosys
+LDFLAGS= -L$(LIBOPENCM3)/lib --static -T../ld/stm32vl-discovery.ld -nostartfiles -Wl,--gc-sections -mthumb\
+            -mcpu=cortex-m3 -msoft-float -mfix-cortex-m3-ldrd  -lgcc -lc -lopencm3_stm32f1 -lnosys 
 
 #libopencm3 examples
 main_cm3.o: main_cm3.c

@@ -3,7 +3,7 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
 #include <stdint.h>
-#include "avec_newlib.h"
+#include "with_newlib.h"
 #include "common.h"
 #ifndef STM32F1
 #include "stm32f4_initialisation.h"
@@ -23,7 +23,8 @@ void clock_setup(void)
 {
 #ifdef STM32F1
 #ifdef STM32F10X_LD_VL
- rcc_clock_setup_in_hse_8mhz_out_24mhz();  // STM32F100 discovery
+ // rcc_clock_setup_in_hse_8mhz_out_24mhz();  // STM32F100 discovery
+ rcc_clock_setup_pll(&rcc_hse_configs[RCC_CLOCK_HSE8_24MHZ]);
 #else
  // rcc_clock_setup_in_hse_8mhz_out_72mhz();  // STM32F103
  rcc_clock_setup_pll(&rcc_hse_configs[RCC_CLOCK_HSE8_72MHZ]);

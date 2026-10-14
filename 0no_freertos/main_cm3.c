@@ -1,5 +1,8 @@
 #include "common.h"
-#include "../common/avec_newlib.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "../common/with_newlib.h"
 
 void disp8(char c)
 {char tmp;
@@ -11,7 +14,7 @@ void disp16(short s) {disp8(s>>8); disp8(s&0xff); }
 
 void disp32(short s) {disp16(s>>16); disp16(s&0xffff); }
 
-#ifdef avec_newlib
+#ifdef with_newlib
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
