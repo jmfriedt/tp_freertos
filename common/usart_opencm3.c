@@ -11,7 +11,7 @@
 
 #define usart1        // comment for STM32F4Discovery
 
-#ifdef avec_newlib
+#ifdef with_newlib
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -37,7 +37,7 @@ void clock_setup(void)
   rcc_periph_clock_enable(RCC_GPIOD); // Enable GPIOD clock for F4 (LEDs)
   rcc_periph_clock_enable(RCC_GPIOA); // Enable GPIOA clock
 #ifdef usart1
-  rcc_periph_clock_enable(RCC_USART1);
+//  rcc_periph_clock_enable(RCC_USART1);
 #else
   rcc_periph_clock_enable(RCC_USART2);
 #endif
@@ -120,7 +120,7 @@ void Led_Lo2(void) {gpio_clear(GPIOA, GPIO13);}
 #endif
 
 // define newlib stub
-#ifdef avec_newlib
+#ifdef with_newlib
 int _write(int file, char *ptr, int len)
 { int i; 
   if (file == STDOUT_FILENO || file == STDERR_FILENO) {

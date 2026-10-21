@@ -5,10 +5,10 @@
 #include <libopencm3/lm4f/timer.h>
 
 #include <stdint.h>
-#include "avec_newlib.h"
+#include "with_newlib.h"
 #include "common.h"
 
-#ifdef avec_newlib
+#ifdef with_newlib
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -50,7 +50,7 @@ void Led_Hi2(void) {gpio_set  (GPIOF, GPIO1);}
 void Led_Lo2(void) {gpio_clear(GPIOF, GPIO1);}
 
 // define newlib stub
-#ifdef avec_newlib
+#ifdef with_newlib
 int _write(int file, char *ptr, int len)
 { int i; 
   if (file == STDOUT_FILENO || file == STDERR_FILENO) {

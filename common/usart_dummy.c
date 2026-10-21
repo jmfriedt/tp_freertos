@@ -1,7 +1,7 @@
-#include "avec_newlib.h"
+#include "with_newlib.h"
 #include "common.h"
 
-#ifdef avec_newlib
+#ifdef with_newlib
 #include <stdint.h>
 #include <errno.h>
 #include <stdio.h>
@@ -29,7 +29,7 @@ void Led_Hi2(void) {}
 void Led_Lo2(void) {}
 
 // define newlib stub
-#ifdef avec_newlib
+#ifdef with_newlib
 int _write(int file, char *ptr, int len)
 { int i; 
   if (file == STDOUT_FILENO || file == STDERR_FILENO) {
