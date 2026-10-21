@@ -3,4 +3,6 @@
 *.bin
 *.elf
 *.lst
+*.hex
+*.s19
 DAC*txt
