@@ -3,12 +3,13 @@
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/stm32/timer.h>
 #include "common.h"
+#include "../common/with_newlib.h"
 
 void pwm_init_timer(volatile uint32_t *, uint32_t, uint32_t, uint32_t, uint32_t);
 void pwm_init_output_channel(uint32_t, enum tim_oc_id, volatile uint32_t *, uint32_t, uint32_t, uint16_t);
 void pwm_start_timer(uint32_t);
 
-//#define avec_newlib
+//#define with_newlib
 
 void pwm_init_timer(volatile uint32_t *reg, uint32_t en, uint32_t timer_peripheral, uint32_t prescaler, uint32_t period)
 {
@@ -72,7 +73,7 @@ int main(void)
     gpio_toggle(GPIOC, GPIO9);
     gpio_toggle(GPIOC, GPIO8);
     c = (c == 9) ? 0 : c + 1;	// cyclic increment c
-#ifndef avec_newlib
+#ifndef with_newlib
     uart_putc(c + '0'); // USART1: send byte
     uart_puts("\r\n\0");
 #else

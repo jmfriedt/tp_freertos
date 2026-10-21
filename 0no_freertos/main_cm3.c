@@ -28,7 +28,7 @@ int main(void)
   while (1) {
     if (c&0x01) {Led_Hi1();Led_Hi2();} else {Led_Lo1();Led_Lo2();}
     c = (c == 9) ? 0 : c + 1;	// cyclic increment c
-#ifndef avec_newlib
+#ifndef with_newlib
     disp32(c); // USART: send byte
     uart_puts("\r\n\0");
 #else
